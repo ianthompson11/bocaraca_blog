@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'blogapp',
     'widget_tweaks',
+    "accounts",  # new Esta se esta agregando para hacer el sign up
 ]
 
 MIDDLEWARE = [
@@ -125,4 +126,4 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = "/"  # new Esta linea redirije al usuario a / despues de un ligin exitoso
-LOGOUT_REDIRECT_URL = "/"  # new
+LOGOUT_REDIRECT_URL = "/"  # new Esta linea redirije al usuario a / despues de presionar el boton de cerrar sesion
