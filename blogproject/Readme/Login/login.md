@@ -11,7 +11,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'blogapp',
     'widget_tweaks',
-    # se agrega despues "accounts",  # new
 ] 
 ```
 
@@ -76,7 +75,8 @@ Una vez hecho esto, la funcionalidad deberia funcionar parcialmente basado en lo
 LOGIN_REDIRECT_URL = "/"  # new
 ```
 
-UNa vez realizada esta modificacion podemos acceder a `http://127.0.0.1:8000/accounts/login/` y veremos una paguina de login bastante simple pero que es capas de controlar el acceso al sitio. 
+Una vez realizada esta modificacion podemos acceder a `http://127.0.0.1:8000/accounts/login/` y veremos una paguina de login bastante simple pero que es capas de controlar el acceso al sitio. 
+![image](https://github.com/user-attachments/assets/84ebc540-30de-4c8c-af4c-9f4b2f3a4639)
 
 Ahora bien. Cabe recalcar que sino hemos creado un usuario no podremos iniciar sesion. Para ello es necesario colocar en el terminal de anaconda `python manage.py createsuperuser` para crear un usuario y contraseña con el que iniciar sesión. Cabe recalcar que este usuario tendra permisos elevados dentro del blog y podra entrar a la pagina de admin. 
 
@@ -117,6 +117,9 @@ Esta seccion se encuentra aproximadamente en la linea 58 del codigo original`
         {% endif %}
 ```
 Esta configuracion tambien incluye la estetica del nuevo boton.
+
+![image](https://github.com/user-attachments/assets/9513fda7-9e73-4728-a5da-7f466d9828aa)
+
 
 Ahora es necesario hacer que despues de cerrar sesion el usuario sea redireccionado, esto se hace modificando `blogproject/settings.py` agregando una linea similar a la redireccion necesaria despues de iniciar sesión. Esta linea debe estar al final del archivo
 
@@ -204,6 +207,9 @@ Ahora creamos una plantilla, `templates/registration/signup.html` y le colocamos
 </form>
 {% endblock %}
 ```
+Hasta aqui tendriamos lista una pagina de SignUp funcional 
+![image](https://github.com/user-attachments/assets/389608ee-4bd3-4333-9768-9242c591fdc8)
+
 
 Posteiormente modificamos el login para que incluya la opcion de crear un usuario, esta debe redirigir al Sign Up
 
@@ -218,6 +224,8 @@ Posteiormente modificamos el login para que incluya la opcion de crear un usuari
  <p>Don't have an account? <a href="{% url 'signup' %}">Sign up here</a></p>
  </form>
 ```
+![image](https://github.com/user-attachments/assets/7a462331-ebc2-44b6-8ada-6415d963fe14)
+
 
 Hasta esta seccion se han añadido funcionalidades necesarias en el codigo principal. Ahora bien posteriormente se hicieron modificaciones en el diseño relacionadas con el codigo principal que cambian algunas secciones de este codigo. 
 Esta guia solo incluira aquello no relacionado con el diseño. En otra guia podria añadirse informacion sobre modificaciones pertinentes al diseño. 
