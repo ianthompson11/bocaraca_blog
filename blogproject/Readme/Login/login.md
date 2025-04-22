@@ -1,3 +1,4 @@
+# LOGIN
 Para poder modificar el login primero fue necesario asegurarnos de que en `blogproject/settings.py`en la sección de INSTALLED_APPS se encontrara la opción relacionada con auth ya instalada
 
 ``` python
