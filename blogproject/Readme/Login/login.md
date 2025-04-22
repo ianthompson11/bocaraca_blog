@@ -76,6 +76,7 @@ LOGIN_REDIRECT_URL = "/"  # new
 ```
 
 Una vez realizada esta modificacion podemos acceder a `http://127.0.0.1:8000/accounts/login/` y veremos una paguina de login bastante simple pero que es capas de controlar el acceso al sitio. 
+
 ![image](https://github.com/user-attachments/assets/84ebc540-30de-4c8c-af4c-9f4b2f3a4639)
 
 Ahora bien. Cabe recalcar que sino hemos creado un usuario no podremos iniciar sesion. Para ello es necesario colocar en el terminal de anaconda `python manage.py createsuperuser` para crear un usuario y contraseña con el que iniciar sesión. Cabe recalcar que este usuario tendra permisos elevados dentro del blog y podra entrar a la pagina de admin. 
