@@ -53,3 +53,14 @@ class CommentCreateView(CreateView):
 
     def get_success_url(self):
         return reverse_lazy('blogapp:blog_detail', kwargs={'pk': self.kwargs['blog_pk']})
+
+#The last of us
+
+def inicio(request):
+    contexto = {
+        "titulo": "The Last of Us: Supervivientes",
+        "frase": "Cuando estás perdido en la oscuridad, busca la luz.",
+        "personaje": "Ellie Williams",
+        "imagen": "images/ellie.jpg",
+    }
+    return render(request, "index.html", contexto)
