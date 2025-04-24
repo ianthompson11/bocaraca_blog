@@ -2,10 +2,28 @@ from django.views.generic import ListView, DetailView, CreateView
 from django.urls import reverse_lazy
 from .models import Blog, Review, Comment
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render, redirect
+from .forms import BlogForm
+
+
+def create_blog(request):
+    if request.method == 'POST':
+        form = BlogForm(request.POST, request.FILES)
+        if form.is_valid():
+            blog = form.save(commit=False)
+            blog.author = request.user  # Esto funciona si el usuario está logueado
+            blog.save()
+            return redirect('blog_list')  # Cambia 'blog_list' si tienes otro nombre de vista principal
+    else:
+        form = BlogForm()
+    
+    return render(request, 'blog/create_blog.html', {'form': form})
+
 
 class BlogListView(ListView):
     model = Blog
     template_name = 'blogapp/blog_list.html'
+    
 
 
 class BlogDetailView(DetailView):
