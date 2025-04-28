@@ -57,7 +57,7 @@
       }
   </style>
 </head>
-<<<<<<< HEAD
+
 <body id="body" class="flex flex-col min-h-screen bg-lightbg dark:bg-darkbg text-lighttext dark:text-darktext font-sans transition-all duration-700 ease-in-out">
   <nav class="bg-white dark:bg-gradient-to-r dark:from-green-950 dark:to-gray-800 shadow-md py-4 px-6 transition-colors">
       <div class="max-w-6xl mx-auto flex justify-between items-center">
@@ -69,54 +69,47 @@
               </button>
               {% if user.is_authenticated %}
               <a href="{% url 'blogapp:add_blog' %}" class="bg-moss hover:bg-olive text-white font-semibold px-4 py-2 rounded transition duration-300 shadow-md">New Blog</a>
+              <form action="{% url 'logout' %}" method="post"> 
+                {% csrf_token %}
+                <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded transition-all duration-500 ease-in-out">
+                  Log Out 
+                </button>
+              </form>
               {% endif %}
           </div>
-=======
-<body id="body" class="flex flex-col min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white font-sans transition-all duration-700 ease-in-out">
-  <nav class="bg-white dark:bg-gradient-to-r dark:from-gray-900 dark:to-gray-700 shadow-md py-4 px-6 transition-colors">
-    <div class="max-w-6xl mx-auto flex justify-between items-center">
-      <a href="{% url 'blogapp:blog_list' %}" class="text-gray-900 dark:text-white text-2xl font-semibold tracking-wider transition-colors">BlogSpace</a>
-      <div class="flex items-center space-x-4">
-        <button onclick="toggleDarkMode()" class="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 text-gray-900 dark:text-white hover:scale-105 transition-all duration-300 shadow-lg">
-  <span id="theme-icon" class="transition-transform duration-500 transform">🌞</span>
-  <span id="theme-label" class="transition-opacity duration-500 ease-in-out">Modo Claro</span>
-</button>
-        {% if user.is_authenticated %}
-          <a href="{% url 'blogapp:add_blog' %}" class="bg-blue-500 hover:bg-blue-600 text-white dark:bg-blue-600 dark:hover:bg-blue-700 dark:text-white font-medium py-2 px-4 rounded transition-all duration-500 ease-in-out">New Blog</a>
-          <form action="{% url 'logout' %}" method="post"> 
-            {% csrf_token %}
-            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded transition-all duration-500 ease-in-out">
-              Log Out 
-            </button>
-          </form>
-        {% endif %}
->>>>>>> main
+
       </div>
   </nav>
   <main class="flex-grow w-full bg-white dark:bg-gray-900 transition-all duration-700 ease-in-out">
-      <div class="max-w-4xl mx-auto px-4 py-8">
-          <section class="relative w-full h-64 mb-8 rounded-lg overflow-hidden shadow-lg animate-fade-in">
-              {% load static %}
-              <img src="{% static 'blogapp/images/thelastofus_banner.jpg' %}" alt="Banner The Last of Us" class="w-full h-full object-cover">
-              <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-                  <h1 class="text-3xl font-bold text-palegreen text-center mt-6">Bienvenido al mundo de The Last of Us</h1>
-              </div>
-          </section>
+    <div class="max-w-4xl mx-auto px-4 py-8">
 
+        {% block banner %}
+        <section class="relative w-full h-64 mb-8 rounded-lg overflow-hidden shadow-lg animate-fade-in">
+            {% load static %}
+            <img src="{% static 'blogapp/images/thelastofus_banner.jpg' %}" alt="Banner The Last of Us" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                <h1 class="text-3xl font-bold text-palegreen text-center mt-6">Bienvenido al mundo de The Last of Us</h1>
+            </div>
+        </section>
+        {% endblock banner %}
 
-          <div class="bg-darkbg border border-gray-700 text-darktext p-4 rounded shadow">
-              <h2 class="text-lg font-semibold mb-2">Frases icónicas</h2>
-              <ul class="list-disc pl-4 text-sm text-gray-300 italic">
-                  <li>"Endure and survive." – Ellie</li>
-                  <li>"You have no idea what loss is." – Joel</li>
-                  <li>"When you're lost in the darkness, look for the light." – Fireflies</li>
-              </ul>
-          </div>
+        {% block frases %}
+        <div class="bg-darkbg border border-gray-700 text-darktext p-4 rounded shadow">
+            <h2 class="text-lg font-semibold mb-2">Frases icónicas</h2>
+            <ul class="list-disc pl-4 text-sm text-gray-300 italic">
+                <li>"Endure and survive." – Ellie</li>
+                <li>"You have no idea what loss is." – Joel</li>
+                <li>"When you're lost in the darkness, look for the light." – Fireflies</li>
+            </ul>
+        </div>
+        {% endblock frases %}
 
+        {% block content %}
+        {% endblock %}
+        
+    </div>
+</main>
 
-          {% block content %}{% endblock %}
-      </div>
-  </main>
 
   <script>
       // Persist dark mode setting
