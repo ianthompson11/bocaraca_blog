@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os  
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -120,16 +121,33 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
-import os
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
-#PARA IMAGENES EN EL CAMPO TEXTO  SE AGREGÓ
+STATIC_URL = '/static/'
+# Esta línea define la URL base para acceder a los archivos estáticos en tu sitio web.
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+# Esta lista define los directorios donde Django buscará archivos estáticos además de los de las aplicaciones.
+# El warning indicaba que 'C:\Users\jason\OneDrive - Universidad Tecnológica de Panamá\Git clon\bocaraca_blog\blogproject\static' no existía.
+# Asegúrate de crear esta carpeta o comenta/elimina esta línea si no la necesitas.
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# Esta línea define el directorio donde Django recolectará todos los archivos estáticos cuando ejecutes 'python manage.py collectstatic'.
+# Asegúrate de que la carpeta 'staticfiles' exista en la raíz de tu proyecto.
+
+# PARA IMAGENES EN EL CAMPO TEXTO  SE AGREGÓ
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
-CKEDITOR_UPLOAD_PATH = "uploads/"
+# Esta línea define la URL base para acceder a los archivos de medios subidos por el usuario.
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+# Esta línea define el directorio donde Django guardará los archivos de medios subidos por el usuario.
+# Asegúrate de que la carpeta 'media' exista en la raíz de tu proyecto.
+
+CKEDITOR_UPLOAD_PATH = "uploads/"
+# Esta línea define la ruta dentro de MEDIA_ROOT donde se guardarán las imágenes subidas a través del editor CKEditor.
+# Asegúrate de que la carpeta 'uploads' exista dentro de tu carpeta 'media'.
 
 
 # Default primary key field type
