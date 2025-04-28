@@ -1,9 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
-
-
-# MODELOS
+from django.db.models import Avg
 
 class Blog(models.Model):
     title = models.CharField(max_length=200)
@@ -13,7 +11,17 @@ class Blog(models.Model):
 
     def __str__(self):
         return self.title
-
+#se calcula el promedio de las puntuaciones de reviews del blog
+    @property
+    def average_rating(self):
+        reviews = self.reviews.all()
+        if reviews.exists():
+            return reviews.aggregate(Avg('rating'))['rating__avg'] or 0
+        return 0
+#se cuentan las reviews del blog
+    @property
+    def review_count(self):
+        return self.reviews.count()
 
 class Review(models.Model):
     blog = models.ForeignKey(Blog, on_delete=models.CASCADE, related_name='reviews')
@@ -24,8 +32,6 @@ class Review(models.Model):
 
     def __str__(self):
         return f"{self.reviewer.username} - {self.blog.title}"
-
-
 
 class Comment(models.Model):
     review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='comments')

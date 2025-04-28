@@ -6,8 +6,21 @@
     <div class="space-y-2 transition-all duration-700 ease-in-out">
       {% for field in form %}
         <div>
-          <label for="{{ field.id_for_label }}" class="block text-sm font-medium mb-1 text-gray-900 dark:text-white">{{ field.label }}</label>
-          {{ field|add_class:"bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2 rounded-lg w-full border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" }}
+          {% if field.name == "rating" %}
+            <label class="block text-sm font-medium mb-1 text-gray-900 dark:text-white">Rating</label>
+            <div class="flex space-x-2">
+              {% for i in "12345" %}
+                <button type="button" class="rating-button px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-blue-500 hover:text-white transition-all duration-300" data-value="{{ i }}">
+                  {{ i }} ⭐
+                </button>
+              {% endfor %}
+              <input type="hidden" name="rating" id="rating-input" value="{{ form.rating.value|default:0 }}">
+            </div>
+            <p id="rating-error" class="text-red-500 text-sm hidden">Debe elegir un valor entre 1 y 5.</p>
+          {% else %}
+            <label for="{{ field.id_for_label }}" class="block text-sm font-medium mb-1 text-gray-900 dark:text-white">{{ field.label }}</label>
+            {{ field|add_class:"bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2 rounded-lg w-full border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" }}
+          {% endif %}
           {% if field.errors %}
             <p class="text-red-500 text-sm">{{ field.errors|striptags }}</p>
           {% endif %}
@@ -16,4 +29,29 @@
     </div>
     <button type="submit" class="px-6 py-2 bg-green-500 hover:bg-green-600 text-white dark:bg-green-600 dark:hover:bg-green-700 rounded transition-all duration-500 ease-in-out">Submit Review</button>
   </form>
+
+  <script>
+    // JavaScript para manejar la selección de estrellas
+    document.querySelectorAll('.rating-button').forEach(button => {
+      button.addEventListener('click', function () {
+        // Remover la clase activa de todos los botones
+        document.querySelectorAll('.rating-button').forEach(btn => btn.classList.remove('bg-blue-500', 'text-white', 'dark:bg-gray-300', 'dark:text-black'));
+        // Agregar la clase activa al botón seleccionado
+        this.classList.add('bg-blue-500', 'text-white', 'dark:bg-gray-300', 'dark:text-black');
+        // Actualizar el valor del campo oculto
+        document.getElementById('rating-input').value = this.getAttribute('data-value');
+        // Ocultar el mensaje de error si se selecciona un valor
+        document.getElementById('rating-error').classList.add('hidden');
+      });
+    });
+
+    // Validar el formulario antes de enviarlo
+    document.querySelector('form').addEventListener('submit', function (e) {
+      const ratingValue = document.getElementById('rating-input').value;
+      if (!ratingValue || ratingValue < 1 || ratingValue > 5) {
+        e.preventDefault(); // Evitar el envío del formulario
+        document.getElementById('rating-error').classList.remove('hidden');
+      }
+    });
+  </script>
 {% endblock %}
