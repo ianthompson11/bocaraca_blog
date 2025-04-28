@@ -3,7 +3,6 @@ from django.views.generic import ListView, DetailView, CreateView
 from django.urls import reverse_lazy
 from .models import Blog, Review, Comment
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import CommentForm  # Importa tu CommentForm
 
 class BlogListView(ListView):
     model = Blog
@@ -44,7 +43,6 @@ class ReviewCreateView(CreateView):
 
 class CommentCreateView(CreateView):
     model = Comment
-    form_class = CommentForm  # Especifica el formulario que quieres usar
     template_name = 'blogapp/comment_form.html'
 
     def form_valid(self, form):
