@@ -23,6 +23,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('ckeditor/', include('ckeditor_uploader.urls')),
     path('', include('blogapp.urls')),  # Conecta las URLs de blogapp
+    path("accounts/", include("accounts.urls")),  # new Se esta utilizando para la seccion de Sign Up
+    path("accounts/", include("django.contrib.auth.urls")),  # new
 ]
 
 if settings.DEBUG:

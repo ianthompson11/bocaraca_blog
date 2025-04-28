@@ -40,10 +40,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'blogapp',
     'widget_tweaks',
+<<<<<<< HEAD
 
     # App del blog
     'ckeditor',
     'ckeditor_uploader',
+=======
+    "accounts",  # new Esta se esta agregando para hacer el sign up
+>>>>>>> main
 ]
 
 MIDDLEWARE = [
@@ -61,7 +65,7 @@ ROOT_URLCONF = 'blogproject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['blogapp/templates/blogapp'],
+        'DIRS': [BASE_DIR / 'templates', BASE_DIR / 'blogapp/templates/blogapp'],  # Esta modificacion agrega las plantillas del proyecto tambien
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -153,4 +157,11 @@ CKEDITOR_UPLOAD_PATH = "uploads/"
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
+<<<<<<< HEAD
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+=======
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_REDIRECT_URL = "/"  # new Esta linea redirije al usuario a / despues de un ligin exitoso
+LOGOUT_REDIRECT_URL = "/"  # new Esta linea redirije al usuario a / despues de presionar el boton de cerrar sesion
+>>>>>>> main

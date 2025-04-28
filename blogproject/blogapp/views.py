@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from .models import Blog, Review, Comment
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-class BlogListView(ListView):
+class BlogListView(LoginRequiredMixin, ListView): # Se realizo una modificacion para requeriar Login antes de ver el blog
     model = Blog
     template_name = 'blogapp/blog_list.html'
 
