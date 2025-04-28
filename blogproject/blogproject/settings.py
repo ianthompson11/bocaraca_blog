@@ -156,11 +156,8 @@ CKEDITOR_UPLOAD_PATH = "uploads/"
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
-<<<<<<< HEAD
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-=======
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = "/"  # new Esta linea redirije al usuario a / despues de un ligin exitoso
 LOGOUT_REDIRECT_URL = "/"  # new Esta linea redirije al usuario a / despues de presionar el boton de cerrar sesion
->>>>>>> main
