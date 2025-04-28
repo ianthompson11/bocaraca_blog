@@ -40,14 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'blogapp',
     'widget_tweaks',
-<<<<<<< HEAD
 
     # App del blog
     'ckeditor',
     'ckeditor_uploader',
-=======
+
     "accounts",  # new Esta se esta agregando para hacer el sign up
->>>>>>> main
+
 ]
 
 MIDDLEWARE = [
