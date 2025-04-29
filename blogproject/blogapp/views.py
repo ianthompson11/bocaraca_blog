@@ -1,7 +1,9 @@
 from django.views.generic import ListView, DetailView, CreateView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from .models import Blog, Review, Comment
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import get_object_or_404
+from django.contrib import messages
 
 class BlogListView(ListView):
     model = Blog
@@ -33,12 +35,19 @@ class ReviewCreateView(CreateView):
     template_name = 'blogapp/review_form.html'
 
     def form_valid(self, form):
-        form.instance.reviewer = self.request.user
-        form.instance.blog_id = self.kwargs['pk']
+        blog = get_object_or_404(Blog, pk=self.kwargs['pk'])
+        reviewer = self.request.user
+        # Verificar si el usuario ya ha creado una review para este blog
+        existing_review = Review.objects.filter(blog=blog, reviewer=reviewer).exists()
+        if existing_review:
+            messages.error(self.request, "You have already reviewed this blog.")
+            return self.form_invalid(form)
+        form.instance.blog = blog
+        form.instance.reviewer = reviewer
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('blogapp:blog_detail', kwargs={'pk': self.kwargs['pk']})
+        return reverse('blogapp:blog_detail', kwargs={'pk': self.kwargs['pk']})
 
 
 class CommentCreateView(CreateView):

@@ -2,6 +2,41 @@
 {% load widget_tweaks %}
 {% block content %}
   <h1 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Write a Review</h1>
+  <style>
+    .rating {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+    }
+
+    .rating > input {
+      display: none;
+    }
+
+    .rating > label {
+      position: relative;
+      width: 1em;
+      font-size: 2rem;
+      color: #ddd;
+      cursor: pointer;
+      margin-right: 0.2em;
+    }
+
+    .rating > label::before {
+      content: "\f005";
+      font-family: FontAwesome;
+      display: inline-block;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    /* Estilo para llenar las estrellas de izquierda a derecha */
+    .rating > label.checked {
+      color: #FFD700;
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <form method="post" class="space-y-4 transition-all duration-700 ease-in-out animate-fade-in">{% csrf_token %}
     <div class="space-y-2 transition-all duration-700 ease-in-out">
       {% for field in form %}
@@ -9,11 +44,15 @@
           {% if field.name == "rating" %}
             <label class="block text-sm font-medium mb-1 text-gray-900 dark:text-white">Rating</label>
             <div class="flex space-x-2">
-              {% for i in "12345" %}
-                <button type="button" class="rating-button px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-blue-500 hover:text-white transition-all duration-300" data-value="{{ i }}">
-                  {{ i }} ⭐
-                </button>
-              {% endfor %}
+              <div class="rating">
+                {% for i in "12345" %}
+                  <input type="radio" id="star{{ i }}" name="rating" value="{{ i }}" />
+                  <label for="star{{ i }}" title="{{ i }} stars">
+                    <i class="fas fa-star"></i>
+                  </label>
+                {% endfor %}
+              </div>
+              <span id="selected-rating" class="text-xl font-semibold ml-2"></span>
               <input type="hidden" name="rating" id="rating-input" value="{{ form.rating.value|default:0 }}">
             </div>
             <p id="rating-error" class="text-red-500 text-sm hidden">Debe elegir un valor entre 1 y 5.</p>
@@ -32,16 +71,28 @@
 
   <script>
     // JavaScript para manejar la selección de estrellas
-    document.querySelectorAll('.rating-button').forEach(button => {
-      button.addEventListener('click', function () {
-        // Remover la clase activa de todos los botones
-        document.querySelectorAll('.rating-button').forEach(btn => btn.classList.remove('bg-blue-500', 'text-white', 'dark:bg-gray-300', 'dark:text-black'));
-        // Agregar la clase activa al botón seleccionado
-        this.classList.add('bg-blue-500', 'text-white', 'dark:bg-gray-300', 'dark:text-black');
+    document.querySelectorAll('.rating > label').forEach(label => {
+      label.addEventListener('click', function () {
         // Actualizar el valor del campo oculto
-        document.getElementById('rating-input').value = this.getAttribute('data-value');
+        const ratingValue = this.getAttribute('for').replace('star', '');
+        document.getElementById('rating-input').value = ratingValue;
+        // Imprimir el valor en la consola
+        console.log('Selected rating:', ratingValue);
+        // Mostrar el valor al lado de las estrellas
+        document.getElementById('selected-rating').textContent = ratingValue;
+        document.getElementById('selected-rating').style.color = '#FFD700'; // Color de las estrellas
         // Ocultar el mensaje de error si se selecciona un valor
         document.getElementById('rating-error').classList.add('hidden');
+
+        // Remover la clase 'checked' de todas las estrellas
+        document.querySelectorAll('.rating > label').forEach(star => {
+          star.classList.remove('checked');
+        });
+
+        // Agregar la clase 'checked' a las estrellas hasta la seleccionada
+        for (let i = 1; i <= ratingValue; i++) {
+          document.querySelector(`.rating > label[for="star${i}"]`).classList.add('checked');
+        }
       });
     });
 
