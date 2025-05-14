@@ -1,0 +1,8 @@
+<h1>{{ post.title }}</h1>
+<p>Por {{ post.author }} el {{ post.created_at }}</p>
+<p>Categorías: 
+    {% for category in post.categories.all %}
+        <a href="{% url 'category_posts' category.slug %}">{{ category.name }}</a>{% if not forloop.last %}, {% endif %}
+    {% endfor %}
+</p>
+<p>{{ post.content }}</p>

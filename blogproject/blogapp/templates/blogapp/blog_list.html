@@ -9,8 +9,12 @@
         </h2>
         <p class="text-sm text-gray-500 dark:text-gray-400">by {{ blog.author.username }} - {{ blog.created_at }}</p>
       </div>
+      {% if blog.image %}
+  <img src="{{ blog.image.url }}" alt="Imagen de {{ blog.title }}" class="w-full h-auto rounded mb-4">
+{% endif %}
     {% empty %}
       <p class="text-gray-500 dark:text-gray-400 text-center">No blogs have been posted yet.</p>
     {% endfor %}
   </div>
 {% endblock %}
+

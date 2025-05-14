@@ -1,0 +1,8 @@
+<h1>Posts en la categoría: {{ category.name }}</h1>
+<ul>
+    {% for post in posts %}
+        <li><a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></li>
+    {% empty %}
+        <li>No hay posts en esta categoría.</li>
+    {% endfor %}
+</ul>

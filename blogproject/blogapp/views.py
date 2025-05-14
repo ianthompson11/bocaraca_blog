@@ -1,7 +1,8 @@
 # blogapp/views.py
 from django.views.generic import ListView, DetailView, CreateView
 from django.urls import reverse_lazy
-from .models import Blog, Review, Comment
+from django.shortcuts import render, get_object_or_404
+from .models import Blog, Review, Comment, Category, Post
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 class BlogListView(LoginRequiredMixin, ListView): # Se realizo una modificacion para requeriar Login antes de ver el blog
@@ -63,3 +64,9 @@ def inicio(request):
         "imagen": "images/ellie.jpg",
     }
     return render(request, "index.html", contexto)
+
+
+def category_posts(request, slug):
+    category = get_object_or_404(Category, slug=slug)
+    posts = category.posts.all()
+    return render(request, 'blogapp/category_posts.html', {'category': category, 'posts': posts})
