@@ -6,8 +6,8 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render
 from django.urls import path, reverse
 from django.utils.html import format_html
-from blogapp.views import custom_dashboard
-from .models import Blog, Review, Comment, Post, Category  # Importa tu modelo
+#from blogapp.views import custom_dashboard
+from .models import Blog, Review, Comment, Category  # Importa tu modelo
 
 # Custom Admin Site
 class CustomAdminSite(AdminSite):
@@ -19,6 +19,10 @@ class CustomAdminSite(AdminSite):
         context = super().each_context(request)
         context['custom_css'] = 'admin/css/custom_admin.css'
         return context
+        filter_horizontal = ('categories',)
+
+# registra modelos categoria
+admin.site.register(Category)
 
 admin.site = CustomAdminSite()
 
@@ -51,18 +55,12 @@ class ReviewAdmin(admin.ModelAdmin):
 class CommentAdmin(admin.ModelAdmin):
     form = CommentAdminForm
 
-class PostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'created_at')  # Campos que se mostrarán en la lista
-    search_fields = ('title', 'content')  # Campos para la barra de búsqueda
-    list_filter = ('author', 'created_at', 'categories')  # Filtro por categorías
-    ordering = ('-created_at',)  # Orden predeterminado
-    filter_horizontal = ('categories',)  # Selector para categorías
+
 
 # Registro de modelos en el admin
 admin.site.register(Blog, BlogAdmin)
 admin.site.register(Review, ReviewAdmin)
 admin.site.register(Comment, CommentAdmin)
-admin.site.register(Post, PostAdmin)  # Registra el modelo con la configuración personalizada
 admin.site.register(Category)
 
 @staff_member_required

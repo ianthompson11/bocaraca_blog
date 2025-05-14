@@ -10,6 +10,7 @@ class Blog(models.Model):
     content = RichTextUploadingField()  # content = models.TextField() esto era lo que estaba antes 
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+    categories = models.ManyToManyField(Category, related_name='blogs')  # Asignar categorias
 
     def __str__(self):
         return self.title
