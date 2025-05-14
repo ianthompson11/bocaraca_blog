@@ -3,6 +3,13 @@
 {% block content %}
   <h1 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Write a Review</h1>
   <style>
+    :root {
+      --infected-default: #ddd;
+      --infected-selected: #e07a5f;
+      --infected-selected-dark: #ff6b6b;
+      --eye-color: #ff0000;
+    }
+
     .rating {
       display: flex;
       flex-direction: row;
@@ -15,28 +22,62 @@
 
     .rating > label {
       position: relative;
-      width: 1em;
-      font-size: 2rem;
-      color: #ddd;
+      width: 3rem;
+      height: 3rem;
       cursor: pointer;
-      margin-right: 0.2em;
+      margin-right: 0.5rem;
+      transition: transform 0.3s ease;
     }
 
-    .rating > label::before {
-      content: "\f005";
-      font-family: FontAwesome;
-      display: inline-block;
-      position: absolute;
-      top: 0;
-      left: 0;
+    .rating > label:hover {
+      transform: scale(1.1);
     }
 
-    /* Estilo para llenar las estrellas de izquierda a derecha */
-    .rating > label.checked {
-      color: #FFD700;
+    .rating > label .infected-head {
+      width: 100%;
+      height: 100%;
+      fill: var(--infected-default);
+      transition: fill 0.3s ease;
+    }
+
+    .rating > label:hover .infected-head {
+      fill: #c0604f; /* Un tono más oscuro al hacer hover */
+    }
+
+    .rating > label.checked .infected-head {
+      fill: var(--infected-selected);
+    }
+
+    .dark .rating > label.checked .infected-head {
+      fill: var(--infected-selected-dark);
+    }
+
+    .dark .rating > label:hover .infected-head {
+      fill: #e65a5a; /* Un tono más claro en modo oscuro al hacer hover */
+    }
+
+    .rating > label .infected-head .eye,
+    .rating > label .infected-head .infection-mark,
+    .rating > label .infected-head .fungal-growth {
+      fill: var(--eye-color);
+    }
+
+    .rating > label .infected-head .eye-outline {
+      fill: none;
+      stroke: #000;
+      stroke-width: 0.5;
+    }
+
+    .rating > label.checked .infected-head .eye {
+      animation: blink 1s infinite alternate ease-in-out;
+    }
+
+    @keyframes blink {
+      0% { opacity: 1; }
+      100% { opacity: 0.5; }
     }
   </style>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
   <form method="post" class="space-y-4 transition-all duration-700 ease-in-out animate-fade-in">{% csrf_token %}
     <div class="space-y-2 transition-all duration-700 ease-in-out">
       {% for field in form %}
@@ -46,9 +87,24 @@
             <div class="flex space-x-2">
               <div class="rating">
                 {% for i in "12345" %}
-                  <input type="radio" id="star{{ i }}" name="rating" value="{{ i }}" />
-                  <label for="star{{ i }}" title="{{ i }} stars">
-                    <i class="fas fa-star"></i>
+                  <input type="radio" id="infected{{ i }}" name="rating" value="{{ i }}" />
+                  <label for="infected{{ i }}" title="{{ i }} infected">
+                    <svg class="infected-head" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                      <!-- Contorno de la cabeza con forma irregular y protuberancias -->
+                      <path d="M12 2c-4 0-6 2-6 5 0 2 1 3 2 4 1 1 2 2 4 2s3-1 4-2c1-1 2-2 2-4 0-1-.5-2-1-3-.5-1-1-1-2-1-.5 0-1 .5-2 1-.5.5-1 1-1 1zm-4 1q-1 1-1 2m10 0q1 1 1 2"/>
+                      <!-- Ojo izquierdo (más grande y asimétrico) -->
+                      <circle class="eye" cx="9" cy="6" r="1.2"/>
+                      <circle class="eye-outline" cx="9" cy="6" r="1.5"/>
+                      <!-- Ojo derecho (más pequeño) -->
+                      <circle class="eye" cx="15" cy="5" r="0.8"/>
+                      <circle class="eye-outline" cx="15" cy="5" r="1.1"/>
+                      <!-- Boca torcida con "dientes rotos" -->
+                      <path d="M9 9q1 1 3 1t3-1m-4 1l1 1m2-1l-1 1" stroke="#000" stroke-width="0.5" fill="none"/>
+                      <!-- Marcas de infección (líneas que sugieren daño) -->
+                      <path class="infection-mark" d="M6 4l-1-1m12 1l2-2m-12 8l-2 1m12-1l2-1" stroke="#ff0000" stroke-width="0.5" fill="none"/>
+                      <!-- Crecimiento fúngico (protuberancia orgánica) -->
+                      <path class="fungal-growth" d="M5 3q-1 1-2 1t-1-1q1-1 2-1t1 1m12 0q1 1 2 1t1-1q-1-1-2-1t-1 1" fill="#ff0000"/>
+                    </svg>
                   </label>
                 {% endfor %}
               </div>
@@ -70,39 +126,39 @@
   </form>
 
   <script>
-    // JavaScript para manejar la selección de estrellas
-    document.querySelectorAll('.rating > label').forEach(label => {
-      label.addEventListener('click', function () {
-        // Actualizar el valor del campo oculto
-        const ratingValue = this.getAttribute('for').replace('star', '');
-        document.getElementById('rating-input').value = ratingValue;
-        // Imprimir el valor en la consola
-        console.log('Selected rating:', ratingValue);
-        // Mostrar el valor al lado de las estrellas
-        document.getElementById('selected-rating').textContent = ratingValue;
-        document.getElementById('selected-rating').style.color = '#FFD700'; // Color de las estrellas
-        // Ocultar el mensaje de error si se selecciona un valor
-        document.getElementById('rating-error').classList.add('hidden');
+    function updateRating(ratingValue) {
+      document.getElementById('rating-input').value = ratingValue;
+      console.log('Selected rating:', ratingValue);
+      document.getElementById('selected-rating').textContent = ratingValue;
+      document.getElementById('selected-rating').style.color = '#e07a5f';
+      document.getElementById('rating-error').classList.add('hidden');
 
-        // Remover la clase 'checked' de todas las estrellas
-        document.querySelectorAll('.rating > label').forEach(star => {
-          star.classList.remove('checked');
-        });
-
-        // Agregar la clase 'checked' a las estrellas hasta la seleccionada
-        for (let i = 1; i <= ratingValue; i++) {
-          document.querySelector(`.rating > label[for="star${i}"]`).classList.add('checked');
-        }
+      document.querySelectorAll('.rating > label').forEach(infected => {
+        infected.classList.remove('checked');
       });
-    });
 
-    // Validar el formulario antes de enviarlo
-    document.querySelector('form').addEventListener('submit', function (e) {
+      for (let i = 1; i <= ratingValue; i++) {
+        document.querySelector(`.rating > label[for="infected${i}"]`).classList.add('checked');
+      }
+    }
+
+    function validateForm(event) {
       const ratingValue = document.getElementById('rating-input').value;
       if (!ratingValue || ratingValue < 1 || ratingValue > 5) {
-        e.preventDefault(); // Evitar el envío del formulario
+        event.preventDefault();
         document.getElementById('rating-error').classList.remove('hidden');
       }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.rating > label').forEach(label => {
+        label.addEventListener('click', function() {
+          const ratingValue = this.getAttribute('for').replace('infected', '');
+          updateRating(ratingValue);
+        });
+      });
+
+      document.querySelector('form').addEventListener('submit', validateForm);
     });
   </script>
 {% endblock %}
