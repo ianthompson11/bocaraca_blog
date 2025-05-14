@@ -8,7 +8,7 @@ class BlogListView(ListView):
     model = Blog
     template_name = 'blogapp/blog_list.html'
     context_object_name = 'blogs'
-    paginate_by = 5  # Mostrar 5 blogs por página
+    paginate_by = 5 # Mostrar 5 blogs por página
 
     def get_queryset(self):
         return Blog.objects.all()
