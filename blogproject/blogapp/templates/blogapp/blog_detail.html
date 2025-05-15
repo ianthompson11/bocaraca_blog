@@ -2,6 +2,17 @@
 {% block content %}
   <article class="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-lg transition-all duration-700 ease-in-out dark:text-white text-gray-900 animate-fade-in">
     <h1 class="text-3xl font-bold mb-2">{{ object.title }}</h1>
+ <!-- NUEVO BLOQUE: Categorías -->
+  {% if object.categorias.exists %}
+    <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+      Categorías:
+      {% for categoria in object.categorias.all %}
+        <span class="inline-block bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-100 px-2 py-1 rounded text-xs mr-1">
+          {{ categoria.nombre }}
+        </span>
+      {% endfor %}
+    </p>
+  {% endif %}
     <p class="text-gray-700 dark:text-gray-300 mb-4">{{ object.content|safe }}</p> {# Se añadió el filtro |safe para renderizar el contenido HTML de CKEditor #}
     <p class="text-sm text-gray-600 dark:text-gray-500">By {{ object.author.username }} - {{ object.created_at }}</p>
   </article>

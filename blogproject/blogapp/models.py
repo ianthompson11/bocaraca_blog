@@ -3,12 +3,22 @@ from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from ckeditor_uploader.fields import RichTextUploadingField #esta la agregé
 
+
+# modelo categoria
+class Categoria(models.Model):
+    nombre = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.nombre
+
+
 # MODELOS
 
 class Blog(models.Model):
     title = models.CharField(max_length=200)
-    content = RichTextUploadingField()  # content = models.TextField() esto era lo que estaba antes 
+    content = RichTextUploadingField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+    categorias = models.ManyToManyField(Categoria, blank=True, related_name='blogs')  # nueva línea
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

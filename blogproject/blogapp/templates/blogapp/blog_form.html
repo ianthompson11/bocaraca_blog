@@ -20,8 +20,19 @@
                     <p class="text-red-500 text-xs italic">{{ form.content.errors }}</p>
                 {% endif %}
             </div>
+
+            <!-- NUEVO BLOQUE para las categorías -->
+            <div class="mb-4">
+                <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Categorías</label>
+                {{ form.categorias }}
+                {% if form.categorias.errors %}
+                    <p class="text-red-500 text-xs italic">{{ form.categorias.errors }}</p>
+                {% endif %}
+            </div>
+
             <button type="submit" class="bg-moss hover:bg-olive text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                 Save Post
             </button>
         </form>
+    </div>
 {% endblock %}

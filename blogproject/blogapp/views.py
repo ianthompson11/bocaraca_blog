@@ -3,6 +3,7 @@ from django.views.generic import ListView, DetailView, CreateView
 from django.urls import reverse_lazy
 from .models import Blog, Review, Comment
 from django.contrib.auth.mixins import LoginRequiredMixin
+from .forms import BlogForm  # Clase para blogForm
 
 class BlogListView(LoginRequiredMixin, ListView): # Se realizo una modificacion para requeriar Login antes de ver el blog
     model = Blog
@@ -14,17 +15,21 @@ class BlogDetailView(DetailView):
     template_name = 'blogapp/blog_detail.html'
 
 
+
 class BlogCreateView(LoginRequiredMixin, CreateView):
     model = Blog
-    fields = ['title', 'content']
+    form_class = BlogForm
     template_name = 'blog_form.html'
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        form.save_m2m()  # necesario para guardar relaciones ManyToMany
+        return response
 
     def get_success_url(self):
         return reverse_lazy('blogapp:blog_detail', kwargs={'pk': self.object.pk})
+
 
 
 class ReviewCreateView(CreateView):
