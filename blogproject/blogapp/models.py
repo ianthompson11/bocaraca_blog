@@ -15,7 +15,7 @@ class Categoria(models.Model):
 # MODELOS
 
 class Blog(models.Model):
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=250)
     content = RichTextUploadingField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     categorias = models.ManyToManyField(Categoria, blank=True, related_name='blogs')  # nueva línea

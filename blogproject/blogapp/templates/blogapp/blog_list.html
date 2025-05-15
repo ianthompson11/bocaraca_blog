@@ -1,6 +1,35 @@
 {% extends 'base.html' %}
 {% block content %}
   <h1 class="text-3xl font-bold mb-6 text-center text-gray-900 dark:text-white">All Blogs</h1>
+
+  <!-- Filtro de categorías arriba, en fila horizontal -->
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Filtrar por Categoría</h3>
+    <div class="flex flex-wrap gap-3">
+      <a href="{% url 'blogapp:blog_list' %}"
+         class="px-4 py-2 rounded-full border
+                {% if not categoria_seleccionada %}
+                  bg-blue-600 text-white border-blue-600
+                {% else %}
+                  bg-transparent text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700
+                {% endif %}">
+        Todas
+      </a>
+      {% for categoria in categorias %}
+        <a href="?categoria={{ categoria.nombre }}"
+           class="px-4 py-2 rounded-full border
+                  {% if categoria.nombre == categoria_seleccionada %}
+                    bg-blue-600 text-white border-blue-600
+                  {% else %}
+                    bg-transparent text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700
+                  {% endif %}">
+          {{ categoria.nombre }}
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Lista de blogs -->
   <div class="grid gap-6">
     {% for blog in object_list %}
       <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-700 ease-in-out dark:text-white text-gray-900 animate-fade-in">

@@ -7,9 +7,10 @@
     <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
       Categorías:
       {% for categoria in object.categorias.all %}
-        <span class="inline-block bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-100 px-2 py-1 rounded text-xs mr-1">
-          {{ categoria.nombre }}
-        </span>
+        <span class="inline-block bg-green-600 dark:bg-green-800 text-white dark:text-white px-2 py-1 rounded text-xs mr-1">
+  {{ categoria.nombre }}
+</span>
+
       {% endfor %}
     </p>
   {% endif %}

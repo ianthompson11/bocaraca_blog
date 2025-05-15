@@ -55,7 +55,26 @@
           box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
           transition: box-shadow 0.3s ease;
       }
+
+       .fade-in {
+      animation: fadeInAnimation 0.3s ease-in-out forwards;
+    }
+
+    @keyframes fadeInAnimation {
+      0% {
+        opacity: 0;
+        transform: translateY(5px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+
   </style>
+
+
 </head>
 
 <body id="body" class="flex flex-col min-h-screen bg-lightbg dark:bg-darkbg text-lighttext dark:text-darktext font-sans transition-all duration-700 ease-in-out">

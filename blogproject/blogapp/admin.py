@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django import forms
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
-from .models import Blog, Review, Comment
+from .models import Blog, Review, Comment, Categoria
 
 # Formularios personalizados para usar CKEditor
 class BlogAdminForm(forms.ModelForm):
@@ -36,3 +36,4 @@ class CommentAdmin(admin.ModelAdmin):
 admin.site.register(Blog, BlogAdmin)
 admin.site.register(Review, ReviewAdmin)
 admin.site.register(Comment, CommentAdmin)
+admin.site.register(Categoria)
