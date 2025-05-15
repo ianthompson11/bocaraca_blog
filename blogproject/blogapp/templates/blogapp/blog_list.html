@@ -14,9 +14,9 @@
         <!-- Contenido principal -->
         <div class="grid gap-6 ml-12 mr-12 z-10 relative">
           {% for blog in blogs %}
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-700 ease-in-out dark:text-white text-gray-900 animate-fade-in">
+            <div class="bg-white bg-opacity-50 backdrop-blur-md dark:bg-transparent dark:bg-opacity-70  rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-700 ease-in-out dark:text-white text-gray-900 animate-fade-in">
               <h2 class="text-xl font-semibold mb-2">
-                <a href="{% url 'blogapp:blog_detail' blog.pk %}" class="text-blue-400 hover:text-blue-300">{{ blog.title }}</a>
+                <a href="{% url 'blogapp:blog_detail' blog.pk %}" class="text-white hover:text-blue-300">{{ blog.title }}</a>
               </h2>
               <p class="text-sm text-gray-500 dark:text-gray-400">by {{ blog.author.username }} - {{ blog.created_at }}</p>
             </div>
