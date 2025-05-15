@@ -21,29 +21,35 @@
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-      tailwind.config = {
-          darkMode: 'class',
-          theme: {
-              extend: {
-                  colors: {
-                      lightbg: '#f4f1ed',
-                      darkbg: '#1a1a1a',
-                      lighttext: '#2e2e2e',
-                      darktext: '#e5e5e5',
-                      moss: '#7b5e57',
-                      olive: '#556b2f',
-                      palegreen: '#90ee90',
-                      bone: '#a89f91',
-                  }
-              }
-          },
-          plugins: []
-      };
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#2d3748',
+            secondary: '#4a5568',
+            accent: '#f6ad55',
+            lightbg: '#f4f1ed',
+            darkbg: '#1a1a1a',
+            lighttext: '#2e2e2e',
+            darktext: '#e5e5e5',
+            moss: '#7b5e57',
+            olive: '#556b2f',
+            palegreen: '#90ee90',
+            bone: '#a89f91',
+          }
+        }
+      },
+      plugins: []
+    };
   </script>
 
-  {{ form.media }}
-  <link rel="stylesheet" href="{% static 'blogapp/css/styles.css' %}" />
+  <!-- Estilos personalizados -->
+  <link rel="stylesheet" href="{% static 'blogapp/css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'blogapp/css/styles.css' %}">
+  
 
+  <!-- Estilos inline para animaciones y mejoras visuales -->
   <style>
     /* Fondo claro con imagen */
     html, body {
@@ -108,6 +114,8 @@
       transition: box-shadow 0.3s ease;
     }
   </style>
+
+  {{ form.media }}
 </head>
 
 <body id="body" class="flex flex-col min-h-screen text-lighttext dark:text-darktext font-sans transition-all duration-700 ease-in-out">
@@ -144,20 +152,19 @@
         </section>
         {% endblock banner %}
 
-        {% block frases %}
-        <div class="bg-darkbg border border-gray-700 text-darktext p-4 rounded shadow">
-            <h2 class="text-lg font-semibold mb-2">Frases icónicas</h2>
-            <ul class="list-disc pl-4 text-sm text-gray-300 italic">
-                <li>"Endure and survive." – Ellie</li>
-                <li>"You have no idea what loss is." – Joel</li>
-                <li>"When you're lost in the darkness, look for the light." – Fireflies</li>
-            </ul>
-        </div>
-        {% endblock frases %}
+      {% block frases %}
+      <div class="bg-darkbg border border-gray-700 text-darktext p-4 rounded shadow">
+        <h2 class="text-lg font-semibold mb-2">Frases icónicas</h2>
+        <ul class="list-disc pl-4 text-sm text-gray-300 italic">
+          <li>"Endure and survive." – Ellie</li>
+          <li>"You have no idea what loss is." – Joel</li>
+          <li>"When you're lost in the darkness, look for the light." – Fireflies</li>
+        </ul>
+      </div>
+      {% endblock frases %}
 
-        {% block content %}
-        {% endblock %}
-        
+      {% block content %}
+      {% endblock %}
     </div>
   </main>
 
@@ -220,6 +227,8 @@
       });
   </script>
 
+  <!-- Cursor Trail -->
+  <script src="{% static 'blogapp/js/cursorTrail.js' %}"></script>
 </body>
 </html>
 
