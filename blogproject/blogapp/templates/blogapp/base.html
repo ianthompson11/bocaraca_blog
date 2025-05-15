@@ -110,21 +110,24 @@
   <nav class="bg-white dark:bg-gradient-to-r dark:from-green-950 dark:to-gray-800 shadow-md py-4 px-6 transition-colors">
       <div class="max-w-6xl mx-auto flex justify-between items-center">
           <a href="{% url 'blogapp:blog_list' %}" class="text-gray-900 dark:text-white text-2xl font-semibold tracking-wider transition-colors">The Last of Us Blog</a>
-          <div class="flex items-center space-x-4">
-              <button onclick="toggleDarkMode()" class="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 text-gray-900 dark:text-white hover:scale-105 transition-all duration-300 shadow-lg">
-                  <span id="theme-icon" class="transition-transform duration-500 transform">🍄</span>
-                  <span id="theme-label" class="transition-opacity duration-500 ease-in-out">Modo Claro</span>
-              </button>
-              {% if user.is_authenticated %}
-              <a href="{% url 'blogapp:add_blog' %}" class="bg-moss hover:bg-olive text-white font-semibold px-4 py-2 rounded transition duration-300 shadow-md">New Blog</a>
-              <form action="{% url 'logout' %}" method="post"> 
+          <div class="flex items-center gap-x-4">  <!-- Aquí el cambio de space-x-4 a gap-x-4 -->
+            <button onclick="toggleDarkMode()" class="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 text-gray-900 dark:text-white hover:scale-105 transition-all duration-300 shadow-lg">
+                <span id="theme-icon" class="transition-transform duration-500 transform">🍄</span>
+                <span id="theme-label" class="transition-opacity duration-500 ease-in-out">Modo Claro</span>
+            </button>
+            {% if user.is_authenticated %}
+            
+            <a href="{% url 'blogapp:add_blog' %}" class="bg-moss hover:bg-olive text-white font-semibold px-4 py-2 rounded transition duration-300 shadow-md">New Blog</a>
+        
+            <form action="{% url 'logout' %}" method="post" class="flex items-center m-0">  <!-- Clases añadidas aquí -->
                 {% csrf_token %}
-                <button type="submit" class="bg-red-700 hover:bg-red-600 text-white font-semibold py-4 px-2.5 rounded transition-all duration-500 ease-in-out">
-                  Log Out 
+                <button type="submit" class="bg-red-700 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded transition duration-300 shadow-md">
+                    Log Out 
                 </button>
-              </form>
-              {% endif %}
-          </div>
+            </form>
+            
+            {% endif %}
+        </div>
 
       </div>
   </nav>
