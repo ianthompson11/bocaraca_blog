@@ -9,6 +9,8 @@ from django.utils.html import format_html
 #from blogapp.views import custom_dashboard
 from .models import Blog, Review, Comment, Category  # Importa tu modelo
 
+
+
 # Custom Admin Site
 class CustomAdminSite(AdminSite):
     site_header = "Panel de Administración de Blog"
@@ -19,10 +21,9 @@ class CustomAdminSite(AdminSite):
         context = super().each_context(request)
         context['custom_css'] = 'admin/css/custom_admin.css'
         return context
-        filter_horizontal = ('categories',)
+       
 
-# registra modelos categoria
-admin.site.register(Category)
+
 
 admin.site = CustomAdminSite()
 
@@ -45,9 +46,12 @@ class CommentAdminForm(forms.ModelForm):
         model = Comment
         fields = '__all__'
 
+
+
 # ModelAdmin personalizados
 class BlogAdmin(admin.ModelAdmin):
     form = BlogAdminForm
+    filter_horizontal = ('categories',)  # categorias
 
 class ReviewAdmin(admin.ModelAdmin):
     form = ReviewAdminForm

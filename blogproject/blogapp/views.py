@@ -5,6 +5,7 @@ from django.shortcuts import render, get_object_or_404
 from .models import Blog, Review, Comment, Category, Post
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+
 class BlogListView(LoginRequiredMixin, ListView): # Se realizo una modificacion para requeriar Login antes de ver el blog
     model = Blog
     template_name = 'blogapp/blog_list.html'
@@ -66,7 +67,14 @@ def inicio(request):
     return render(request, "index.html", contexto)
 
 
+def blog_detail(request, blog_id):
+    blog = get_object_or_404(Blog, id=blog_id)
+    return render(request, 'blogapp/blog_detail.html', {'blog': blog})
+
 def category_posts(request, slug):
     category = get_object_or_404(Category, slug=slug)
-    posts = category.posts.all()
-    return render(request, 'blogapp/category_posts.html', {'category': category, 'posts': posts})
+    posts = category.blogs.all()  # Usa el related_name que configuraste
+    return render(request, 'blogapp/category_posts.html', {
+        'category': category,
+        'posts': posts
+    })

@@ -25,3 +25,12 @@
     <a href="{% url 'blogapp:add_review' object.pk %}" class="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors">Add Review</a>
   </section>
 {% endblock %}
+
+<p><strong>Categorías:</strong>
+    {% for category in blog.categories.all %}
+      <a href="{% url 'category_posts' category.slug %}">{{ category.name }}</a>{% if not forloop.last %}, {% endif %}
+    {% empty %}
+      Sin categoría
+    {% endfor %}
+  </p>
+  

@@ -3,6 +3,16 @@ from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from ckeditor_uploader.fields import RichTextUploadingField #esta la agregé
 
+# modelo para representar categorias
+
+class Category(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
 # MODELOS
 
 class Blog(models.Model):
@@ -37,14 +47,6 @@ class Comment(models.Model):
     def __str__(self):
         return f"Comment by {self.commenter.username}"
 
-# modelo para representar categorias
-
-class Category(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(max_length=100, unique=True)
-
-    def __str__(self):
-        return self.name
 
 # para incluir categorias
 class Post(models.Model):
