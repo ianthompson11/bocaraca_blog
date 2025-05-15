@@ -1,38 +1,183 @@
 {% extends 'base.html' %}
 {% load widget_tweaks %}
 {% block content %}
-    <h1 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Write a Review</h1>
-    <form method="post" class="space-y-4 transition-all duration-700 ease-in-out animate-fade-in">{% csrf_token %}
-        <div class="space-y-2 transition-all duration-700 ease-in-out">
-            {% for field in form %}
-                <div>
-                    <label for="{{ field.id_for_label }}" class="block text-sm font-medium mb-1 text-gray-900 dark:text-white">{{ field.label }}</label>
-                    {% if field.name == 'comment' %}
-                        {# SI el campo actual es el campo llamado 'comment' #}
-                        {{ field|attr:'class:bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2 rounded-lg w-full border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500'|attr:'id:comment-field' }}
-                        {# Le aplicamos las clases existentes y le asignamos el ID 'comment-field' #}
-                    {% else %}
-                        {# Para los otros campos del formulario (incluyendo 'rating'), aplicamos las clases normalmente #}
-                        {{ field|add_class:"bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2 rounded-lg w-full border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" }}
-                    {% endif %}
-                    {% if field.errors %}
-                        <p class="text-red-500 text-sm">{{ field.errors|striptags }}</p>
-                    {% endif %}
-                </div>
-            {% endfor %}
-        </div>
-        <button type="submit" class="px-6 py-2 bg-green-500 hover:bg-green-600 text-white dark:bg-green-600 dark:hover:bg-green-700 rounded transition-all duration-500 ease-in-out">Submit Review</button>
-    </form>
+  <h1 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Write a Review</h1>
+  <style>
+    :root {
+      --infected-default: #ddd;
+      --infected-selected: #e07a5f;
+      --infected-selected-dark: #ff6b6b;
+      --eye-color: #ff0000;
+    }
 
-    {# BLOQUE DE SCRIPT PARA INICIALIZAR CKEDITOR #}
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            ClassicEditor
-                .create( document.querySelector( '#comment-field' ) )
-                .catch( error => {
-                    console.error( error );
-                } );
+    .rating {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+    }
+
+    .rating > input {
+      display: none;
+    }
+
+    .rating > label {
+      position: relative;
+      width: 3rem;
+      height: 3rem;
+      cursor: pointer;
+      margin-right: 0.5rem;
+      transition: transform 0.3s ease;
+    }
+
+    .rating > label:hover {
+      transform: scale(1.1);
+    }
+
+    .rating > label .infected-head {
+      width: 100%;
+      height: 100%;
+      fill: var(--infected-default);
+      transition: fill 0.3s ease;
+    }
+
+    .rating > label:hover .infected-head {
+      fill: #c0604f; /* tono más oscuro al hacer hover */
+    }
+
+    .rating > label.checked .infected-head {
+      fill: var(--infected-selected);
+    }
+
+    .dark .rating > label.checked .infected-head {
+      fill: var(--infected-selected-dark);
+    }
+
+    .dark .rating > label:hover .infected-head {
+      fill: #e65a5a; /* tono más claro en modo oscuro al hacer hover */
+    }
+
+    .rating > label .infected-head .eye,
+    .rating > label .infected-head .infection-mark,
+    .rating > label .infected-head .fungal-growth {
+      fill: var(--eye-color);
+    }
+
+    .rating > label .infected-head .eye-outline {
+      fill: none;
+      stroke: #000;
+      stroke-width: 0.5;
+    }
+
+    .rating > label.checked .infected-head .eye {
+      animation: blink 1s infinite alternate ease-in-out;
+    }
+
+    @keyframes blink {
+      0% { opacity: 1; }
+      100% { opacity: 0.5; }
+    }
+  </style>
+
+  <form method="post" class="space-y-4 transition-all duration-700 ease-in-out animate-fade-in">{% csrf_token %}
+    <div class="space-y-2 transition-all duration-700 ease-in-out">
+      {% for field in form %}
+        <div>
+          {% if field.name == "rating" %}
+            <label class="block text-sm font-medium mb-1 text-gray-900 dark:text-white">Rating</label>
+            <div class="flex space-x-2">
+              <div class="rating">
+                {% for i in "12345" %}
+                  <input type="radio" id="infected{{ i }}" name="rating" value="{{ i }}" />
+                  <label for="infected{{ i }}" title="{{ i }} infected">
+                    <svg class="infected-head" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                      <!-- Contorno de la cabeza con forma irregular y protuberancias -->
+                      <path d="M12 2c-4 0-6 2-6 5 0 2 1 3 2 4 1 1 2 2 4 2s3-1 4-2c1-1 2-2 2-4 0-1-.5-2-1-3-.5-1-1-1-2-1-.5 0-1 .5-2 1-.5.5-1 1-1 1zm-4 1q-1 1-1 2m10 0q1 1 1 2"/>
+                      <!-- Ojo izquierdo (más grande y asimétrico) -->
+                      <circle class="eye" cx="9" cy="6" r="1.2"/>
+                      <circle class="eye-outline" cx="9" cy="6" r="1.5"/>
+                      <!-- Ojo derecho (más pequeño) -->
+                      <circle class="eye" cx="15" cy="5" r="0.8"/>
+                      <circle class="eye-outline" cx="15" cy="5" r="1.1"/>
+                      <!-- Boca torcida con "dientes rotos" -->
+                      <path d="M9 9q1 1 3 1t3-1m-4 1l1 1m2-1l-1 1" stroke="#000" stroke-width="0.5" fill="none"/>
+                      <!-- Marcas de infección (líneas que sugieren daño) -->
+                      <path class="infection-mark" d="M6 4l-1-1m12 1l2-2m-12 8l-2 1m12-1l2-1" stroke="#ff0000" stroke-width="0.5" fill="none"/>
+                      <!-- Crecimiento fúngico (protuberancia orgánica) -->
+                      <path class="fungal-growth" d="M5 3q-1 1-2 1t-1-1q1-1 2-1t1 1m12 0q1 1 2 1t1-1q-1-1-2-1t-1 1" fill="#ff0000"/>
+                    </svg>
+                  </label>
+                {% endfor %}
+              </div>
+              <span id="selected-rating" class="text-xl font-semibold ml-2"></span>
+              <input type="hidden" name="rating" id="rating-input" value="{{ form.rating.value|default:0 }}">
+            </div>
+            <p id="rating-error" class="text-red-500 text-sm hidden">Debe elegir un valor entre 1 y 5.</p>
+          {% else %}
+            <label for="{{ field.id_for_label }}" class="block text-sm font-medium mb-1 text-gray-900 dark:text-white">{{ field.label }}</label>
+            {{ field|add_class:"bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2 rounded-lg w-full border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" }}
+          {% endif %}
+          {% if field.errors %}
+            <p class="text-red-500 text-sm">{{ field.errors|striptags }}</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+    <button type="submit" class="px-6 py-2 bg-green-500 hover:bg-green-600 text-white dark:bg-green-600 dark:hover:bg-green-700 rounded transition-all duration-500 ease-in-out">Submit Review</button>
+  </form>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      ClassicEditor
+        .create( document.querySelector( '#comment-field' ) )
+        .catch( error => {
+          console.error( error );
+        } );
+    });
+
+    function updateRating(ratingValue) {
+      document.getElementById('rating-input').value = ratingValue;
+      console.log('Selected rating:', ratingValue);
+      document.getElementById('selected-rating').textContent = ratingValue;
+      document.getElementById('selected-rating').style.color = '#e07a5f';
+      document.getElementById('rating-error').classList.add('hidden');
+
+      // Remove 'checked' class from all labels
+      document.querySelectorAll('.rating > label').forEach(label => {
+        label.classList.remove('checked');
+      });
+
+      // Add 'checked' class to labels up to the selected rating
+      for (let i = 1; i <= ratingValue; i++) {
+        document.querySelector(`.rating > label[for="infected${i}"]`).classList.add('checked');
+      }
+    }
+
+    function validateForm(event) {
+      const ratingValue = document.getElementById('rating-input').value;
+      if (!ratingValue || ratingValue < 1 || ratingValue > 5) {
+        event.preventDefault();
+        document.getElementById('rating-error').classList.remove('hidden');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const ratingLabels = document.querySelectorAll('.rating > label');
+
+      ratingLabels.forEach(label => {
+        label.addEventListener('click', function(event) {
+          event.preventDefault();
+          const ratingValue = this.getAttribute('for').replace('infected', '');
+          updateRating(ratingValue);
         });
-    </script>
-    {# FIN DEL BLOQUE DE SCRIPT PARA CKEDITOR #}
+      });
+
+      document.querySelector('form').addEventListener('submit', validateForm);
+
+      // Inicializa el rating al cargar la página
+      const initialRating = document.getElementById('rating-input').value;
+      if (initialRating) {
+        updateRating(initialRating);
+      }
+    });
+  </script>
 {% endblock %}

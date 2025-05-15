@@ -1,16 +1,255 @@
 {% extends 'base.html' %}
 {% block content %}
   <h1 class="text-3xl font-bold mb-6 text-center text-gray-900 dark:text-white">All Blogs</h1>
-  <div class="grid gap-6">
-    {% for blog in object_list %}
-      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-700 ease-in-out dark:text-white text-gray-900 animate-fade-in">
-        <h2 class="text-xl font-semibold mb-2">
-          <a href="{% url 'blogapp:blog_detail' blog.pk %}" class="text-blue-400 hover:text-blue-300">{{ blog.title }}</a>
-        </h2>
-        <p class="text-sm text-gray-500 dark:text-gray-400">by {{ blog.author.username }} - {{ blog.created_at }}</p>
+
+  
+  <!-- Contenedor principal con filamentos -->
+  <div class="relative">
+    <!-- Overlay de filamentos -->
+    <div class="cordyceps-overlay"></div>
+
+    <!-- Contenido dentro de slide-wrapper -->
+    <div class="slide-wrapper" style="overflow: hidden; position: relative;">
+      <div class="slide-page current-page" style="position: relative; transition: transform 0.5s ease-in-out;">
+        <!-- Contenido principal -->
+        <div class="grid gap-6 ml-12 mr-12 z-10 relative">
+          {% for blog in blogs %}
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-700 ease-in-out dark:text-white text-gray-900 animate-fade-in">
+              <h2 class="text-xl font-semibold mb-2">
+                <a href="{% url 'blogapp:blog_detail' blog.pk %}" class="text-blue-400 hover:text-blue-300">{{ blog.title }}</a>
+              </h2>
+              <p class="text-sm text-gray-500 dark:text-gray-400">by {{ blog.author.username }} - {{ blog.created_at }}</p>
+            </div>
+          {% empty %}
+            <p class="text-gray-500 dark:text-gray-400 text-center">No blogs have been posted yet.</p>
+          {% endfor %}
+        </div>
       </div>
-    {% empty %}
-      <p class="text-gray-500 dark:text-gray-400 text-center">No blogs have been posted yet.</p>
-    {% endfor %}
+
+      <!-- Contenedor para la nueva página (precargada) -->
+      <div class="slide-page next-page" style="display: none; position: absolute; top: 0; left: 0; width: 100%; transition: transform 0.5s ease-in-out;"></div>
+    </div>
+
+    <!-- Paginación estilo The Last of Us -->
+    <div class="flex justify-center items-center mt-12 relative z-10">
+      <div class="flex items-center space-x-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-6 py-4 rounded-full shadow-lg border border-gray-300 dark:border-gray-700">
+        {% if blogs.has_previous %}
+          <a href="?page=1" title="Primera página" class="px-3 py-1 bg-green-200 dark:bg-green-700 hover:bg-green-300 dark:hover:bg-green-600 text-sm rounded-full transition-colors">
+            <span aria-hidden="true">«</span>
+          </a>
+          <a href="?page={{ blogs.previous_page_number }}" title="Anterior" class="px-3 py-1 bg-green-200 dark:bg-green-700 hover:bg-green-300 dark:hover:bg-green-600 text-sm rounded-full transition-colors">
+            <span aria-hidden="true">‹</span>
+          </a>
+        {% endif %}
+
+        <!-- Paginación -->
+        {% for num in blogs.paginator.page_range %}
+          {% if blogs.number == num %}
+            <span class="text-yellow-500 text-lg font-bold" title="Página actual">{{ num }}</span>
+          {% elif num >= blogs.number|add:"-2" and num <= blogs.number|add:"2" %}
+            <a href="?page={{ num }}" class="hover:text-yellow-300 transition-colors" title="Ir a la página {{ num }}">{{ num }}</a>
+          {% endif %}
+        {% endfor %}
+
+        {% if blogs.has_next %}
+          <a href="?page={{ blogs.next_page_number }}" title="Siguiente" class="px-3 py-1 bg-green-200 dark:bg-green-700 hover:bg-green-300 dark:hover:bg-green-600 text-sm rounded-full transition-colors">
+            <span aria-hidden="true">›</span>
+          </a>
+          <a href="?page={{ blogs.paginator.num_pages }}" title="Última página" class="px-3 py-1 bg-green-200 dark:bg-green-700 hover:bg-green-300 dark:hover:bg-green-600 text-sm rounded-full transition-colors">
+            <span aria-hidden="true">»</span>
+          </a>
+        {% endif %}
+      </div>
+    </div>
   </div>
+
+  <style>
+    
+    /* Filamento principal */
+    .filament-main {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      width: 3px;
+      height: 15px;
+      background: #f4c430;
+      transform: translateX(-50%) rotate(15deg);
+      animation: branch-grow 4s infinite ease-in-out;
+    }
+
+    /* Filamento secundario */
+    .filament-secondary {
+      position: absolute;
+      top: 15px;
+      left: 45%;
+      width: 2px;
+      height: 12px;
+      background: #e07a5f;
+      transform: translateX(-50%) rotate(-25deg);
+      animation: branch-grow-secondary 4s infinite ease-in-out 0.5s;
+    }
+
+    /* Filamento terciario */
+    .filament-tertiary {
+      position: absolute;
+      top: 20px;
+      left: 55%;
+      width: 1.5px;
+      height: 10px;
+      background: #d19c2a;
+      transform: translateX(-50%) rotate(30deg);
+      animation: branch-grow-tertiary 4s infinite ease-in-out 1s;
+    }
+
+   
+    /* Animación del filamento principal */
+    @keyframes branch-grow {
+      0% { height: 0; opacity: 0; transform: translateX(-50%) rotate(15deg) scale(0.5); }
+      50% { height: 20px; opacity: 1; transform: translateX(-50%) rotate(20deg) scale(1); }
+      100% { height: 15px; opacity: 0.8; transform: translateX(-50%) rotate(15deg) scale(0.9); }
+    }
+
+    /* Animación del filamento secundario */
+    @keyframes branch-grow-secondary {
+      0% { height: 0; opacity: 0; transform: translateX(-50%) rotate(-25deg) scale(0.5); }
+      50% { height: 15px; opacity: 0.8; transform: translateX(-50%) rotate(-30deg) scale(1); }
+      100% { height: 12px; opacity: 0.6; transform: translateX(-50%) rotate(-25deg) scale(0.9); }
+    }
+
+    /* Animación del filamento terciario */
+    @keyframes branch-grow-tertiary {
+      0% { height: 0; opacity: 0; transform: translateX(-50%) rotate(30deg) scale(0.5); }
+      50% { height: 12px; opacity: 0.7; transform: translateX(-50%) rotate(35deg) scale(1); }
+      100% { height: 10px; opacity: 0.5; transform: translateX(-50%) rotate(30deg) scale(0.9); }
+    }
+
+   
+
+    /* Overlay de raíces ramificadas con SVG */
+    .cordyceps-overlay {
+      position: absolute;
+      top: -50px;
+      left: -100px;
+      right: -100px;
+      bottom: -50px;
+      pointer-events: none;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 200" preserveAspectRatio="none"><path d="M0,150 Q50,100 100,150 T200,150 T300,150 T400,150 T500,150 T600,150" stroke="%23f4c430" stroke-width="3" fill="none" opacity="0.8"/><path d="M20,140 Q70,90 120,140 T220,140 T320,140 T420,140 T520,140" stroke="%23e07a5f" stroke-width="2" fill="none" opacity="0.7"/><path d="M40,130 Q90,80 140,130 T240,130 T340,130 T440,130 T540,130" stroke="%23d19c2a" stroke-width="1.5" fill="none" opacity="0.6"/><path d="M60,120 Q110,70 160,120 T260,120 T360,120 T460,120 T560,120" stroke="%23a87864" stroke-width="1" fill="none" opacity="0.5"/></svg>') repeat;
+      background-size: 600px 200px;
+      animation: spread-roots 12s infinite linear;
+    }
+
+    @keyframes spread-roots {
+      from { background-position: 0 0; }
+      to { background-position: -600px 0; }
+    }
+
+    /* Ajustes para el contenedor principal */
+    .relative {
+    position: relative;
+    overflow: hidden;
+    padding: 40px; /* Relleno aumentado */
+    width: 100%; /* Ancho establecido al 80% de su padre */
+    max-width: 1200px; /* Asegura que no exceda los 1200px */
+    min-height: 300px; /* Altura mínima para el contenedor */
+    margin: 0 auto; /* Centra el contenedor */
+  }
+
+    /* Estilos para la transición de página */
+    .slide-wrapper {
+      overflow: hidden;
+      position: relative;
+    }
+
+    .slide-page {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      transition: transform 0.5s ease-in-out;
+    }
+
+    .slide-page.next-page {
+      display: block;
+    }
+
+    .slide-page.slide-left {
+      transform: translateX(-100%);
+    }
+
+    .slide-page.slide-right {
+      transform: translateX(100%);
+    }
+
+    .slide-page.current-page {
+      transform: translateX(0);
+    }
+  </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const paginationLinks = document.querySelectorAll('.flex.items-center.space-x-2 a');
+      const currentPage = document.querySelector('.slide-page.current-page');
+      const nextPage = document.querySelector('.slide-page.next-page');
+      const slideWrapper = document.querySelector('.slide-wrapper');
+      let isSliding = false;
+
+      // Estilos iniciales para asegurar que las páginas estén en su lugar
+      slideWrapper.style.overflow = 'hidden';
+      currentPage.style.position = 'relative';
+      nextPage.style.position = 'absolute';
+      nextPage.style.top = '0';
+      nextPage.style.width = '100%';
+
+      paginationLinks.forEach(link => {
+        link.addEventListener('click', async function(event) {
+          event.preventDefault();
+          if (isSliding) return;
+          isSliding = true;
+
+          const href = this.getAttribute('href');
+          const currentPageNum = parseInt(new URLSearchParams(window.location.search).get('page') || 1);
+          const targetPageNum = parseInt(new URLSearchParams(href).get('page') || 1);
+          const direction = targetPageNum > currentPageNum ? 'left' : 'right';
+
+          try {
+            // Precargar el contenido de la nueva página
+            const response = await fetch(href);
+            const html = await response.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const newContent = doc.querySelector('.slide-page.current-page').innerHTML;
+
+            // Insertar el contenido precargado en el contenedor de la nueva página
+            nextPage.innerHTML = newContent;
+            nextPage.style.display = 'block';
+
+            // Preparar las clases para la transición
+            if (direction === 'left') {
+              nextPage.style.transform = 'translateX(100%)';
+              currentPage.style.transform = 'translateX(0)';
+            } else {
+              nextPage.style.transform = 'translateX(-100%)';
+              currentPage.style.transform = 'translateX(0)';
+            }
+
+            // Forzar un reflow para que la transición se active correctamente
+            void slideWrapper.offsetWidth;
+
+            // Iniciar la transición
+            currentPage.style.transform = direction === 'left' ? 'translateX(-100%)' : 'translateX(100%)';
+            nextPage.style.transform = 'translateX(0)';
+
+            // Esperar a que termine la transición
+            setTimeout(() => {
+              window.location.href = href;
+              isSliding = false;
+            }, 500);
+          } catch (error) {
+            console.error('Error al precargar la página:', error);
+            window.location.href = href;
+            isSliding = false;
+          }
+        });
+      });
+    });
+  </script>
 {% endblock %}

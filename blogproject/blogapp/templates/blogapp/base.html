@@ -1,7 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blog and Reviews</title>
+  <!-- Script inline para aplicar el tema inmediatamente -->
+  <script>
+    // Detectar el tema desde localStorage antes de renderizar
+    (function() {
+      const prefersDark = localStorage.getItem('theme') === 'dark';
+      const html = document.documentElement;
+      const body = document.body;
+      if (prefersDark) {
+        html.classList.add('dark');
+        body.classList.add('dark');
+      }
+    })();
+  </script>
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
       tailwind.config = {
@@ -23,38 +39,70 @@
           plugins: []
       };
   </script>
+
   {% load static %}
   {{ form.media }}  {# ¡Agrega esta línea aquí! #}
   <link rel="stylesheet" href="{% static 'blogapp/css/styles.css' %}"> {# Si tienes estilos CSS personalizados #}
+  
+  <!-- Estilos críticos inline para evitar FOUC -->
   <style>
-      html {
-          background-color: white;
-      }
-      .dark html {
-          background-color: black;
-      }
-      html {
-          transition: background-color 0.5s ease-in-out;
-      }
-      html, body {
-          height: 100%;
-          scroll-behavior: smooth;
-          transition: background-color 0.5s ease-in-out;
-      }
-      @keyframes fade-in {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-      }
+    /* Fondo inicial predeterminado */
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      scroll-behavior: smooth;
+      background-color: #ffffff; /* Fondo claro por defecto */
+    }
 
-      .animate-fade-in {
-          animation: fade-in 0.6s ease-out;
-          will-change: opacity, transform;
-      }
-      input:focus, textarea:focus, select:focus {
-          outline: none;
-          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
-          transition: box-shadow 0.3s ease;
-      }
+    /* Fondo en modo oscuro */
+    .dark html, .dark body {
+      background-color: #1a202c; /* Fondo oscuro */
+    }
+
+    /* Asegurar que main tenga el fondo correcto */
+    main {
+      background-color: #ffffff; /* Fondo claro por defecto */
+      min-height: 100%; /* Asegurar que ocupe toda la altura */
+    }
+
+    .dark main {
+      background-color: #1a202c; /* Fondo oscuro */
+    }
+
+    /* Contenedor interno para transiciones */
+    main .slide-wrapper {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      background: inherit; /* Heredar el fondo de main */
+    }
+
+    /* Evitar transiciones hasta que la página esté cargada */
+    html:not(.loaded), body:not(.loaded), main:not(.loaded) {
+      transition: none !important;
+    }
+
+    /* Transiciones después de la carga */
+    html, body, main, .slide-wrapper {
+      transition: background-color 0.5s ease-in-out;
+    }
+
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-fade-in {
+      animation: fade-in 0.6s ease-out;
+      will-change: opacity, transform;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+      transition: box-shadow 0.3s ease;
+    }
   </style>
 </head>
 
@@ -115,6 +163,7 @@
       // Persist dark mode setting
       document.addEventListener('DOMContentLoaded', () => {
           const prefersDark = localStorage.getItem('theme') === 'dark';
+          const html = document.documentElement;
           const body = document.getElementById('body');
           const icon = document.getElementById('theme-icon');
           if (prefersDark) {
@@ -130,20 +179,34 @@
       });
 
       function toggleDarkMode() {
+        const html = document.documentElement;
           const body = document.getElementById('body');
           const icon = document.getElementById('theme-icon');
-          const isDark = body.classList.toggle('dark');
+          const isDark = !body.classList.contains('dark'); // Invertir el estado actual
+
+        // Aplicar el cambio al <html> y <body>
+        if (isDark) {
+          html.classList.add('dark');
+          body.classList.add('dark');
+        } else {
+          html.classList.remove('dark');
+          body.classList.remove('dark');
+        }
+
+        // Guardar en localStorage
           localStorage.setItem('theme', isDark ? 'dark' : 'light');
           if (icon) {
               icon.classList.add('rotate-180');
               setTimeout(() => {
                   icon.textContent = isDark ? '🧟' : '🍄';
                   const label = document.getElementById('theme-label');
-                  if (label) label.style.opacity = 0;
-                  setTimeout(() => {
-                      label.textContent = isDark ? 'Modo Oscuro' : 'Modo Claro';
-                      label.style.opacity = 1;
-                  }, 250);
+                  if (label){
+                      label.style.opacity = 0;
+                      setTimeout(() => {
+                        label.textContent = isDark ? 'Modo Oscuro' : 'Modo Claro';
+                        label.style.opacity = 1;
+                      }, 250);
+                    }
                   icon.classList.remove('rotate-180');
               }, 250);
           }
