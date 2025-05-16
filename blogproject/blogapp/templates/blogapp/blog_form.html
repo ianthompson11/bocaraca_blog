@@ -2,12 +2,12 @@
 {% load static %}
 
 {% block content %}
-    <div class="max-w-2xl mx-auto bg-white dark:bg-gray-800 p-6 rounded-md shadow-md">
-        <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Create a New Blog Post</h2>
+    <div class="max-w-2xl mx-auto bg-transparent backdrop-blur-md dark:bg-transparent backdrop-blur-md p-6 rounded-md shadow-md">
+        <h2 class="text-xl font-semibold text-white dark:text-white mb-4">Create a New Blog Post</h2>
         <form method="post">
             {% csrf_token %}
             <div class="mb-4">
-                <label for="{{ form.title.id_for_label }}" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">{{ form.title.label }}</label>
+                <label for="{{ form.title.id_for_label }}" class="block text-white dark:text-gray-300 text-sm font-bold mb-2">{{ form.title.label }}</label>
                 {{ form.title }}
                 {% if form.title.errors %}
                     <p class="text-red-500 text-xs italic">{{ form.title.errors }}</p>
@@ -23,7 +23,7 @@
 
             <!-- NUEVO BLOQUE para las categorías -->
             <div class="mb-4">
-                <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Categorías</label>
+                <label class="block text-white dark:text-gray-300 text-sm font-bold mb-2">Categorías</label>
                 {{ form.categorias }}
                 {% if form.categorias.errors %}
                     <p class="text-red-500 text-xs italic">{{ form.categorias.errors }}</p>

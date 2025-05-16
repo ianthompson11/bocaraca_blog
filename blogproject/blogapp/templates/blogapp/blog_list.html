@@ -22,20 +22,20 @@
          {% if not categoria_seleccionada %}
            bg-blue-600 text-white border-blue-600
          {% else %}
-           bg-white bg-opacity-30 backdrop-blur-md text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700
+           bg-white bg-opacity-30 backdrop-blur-md text-gray-700 dark:text-gray-300 border-transparent dark:border-transparent hover:bg-gray-200 dark:hover:bg-gray-700
          {% endif %}">
         Todas
       </a>
 
       <!-- Botones por categoría -->
       {% for categoria in categorias %}
-       <a href="?categoria={{ categoria.slug }}"
-           class="px-4 py-2 rounded-full border transition-colors duration-300
-           {% if categoria.nombre == categoria_seleccionada %}
-             bg-blue-600 text-white border-blue-600
-           {% else %}
-             bg-white bg-opacity-30 backdrop-blur-md text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700
-           {% endif %}">
+        <a href="?categoria={{ categoria.slug }}"
+          class="px-4 py-2 rounded-full border transition-colors duration-300
+          {% if categoria.slug == categoria_seleccionada %}
+            bg-blue-600 text-white border-blue-600
+          {% else %}
+            bg-white bg-opacity-30 backdrop-blur-md text-gray-700 dark:text-gray-300 border-transparent dark:border-transparent hover:bg-gray-200 dark:hover:bg-gray-700
+          {% endif %}">
           {{ categoria.nombre }}
         </a>
       {% endfor %}
@@ -70,7 +70,7 @@
 
     <!-- Paginación estilo The Last of Us -->
     <div class="flex justify-center items-center mt-12 relative z-10">
-      <div class="flex items-center space-x-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-6 py-4 rounded-full shadow-lg border border-gray-300 dark:border-gray-700">
+      <div class="flex items-center space-x-2 bg-transparent  dark:bg-transparent backdrop-blur-md text-gray-700 dark:text-gray-300 px-6 py-4 rounded-full shadow-lg border border-transparent dark:border-gray-700">
         {% if blogs.has_previous %}
           <a href="?page=1" title="Primera página" class="px-3 py-1 bg-green-200 dark:bg-green-700 hover:bg-green-300 dark:hover:bg-green-600 text-sm rounded-full transition-colors">
             <span aria-hidden="true">«</span>

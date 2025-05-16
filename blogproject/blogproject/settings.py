@@ -132,8 +132,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 # Esta lista define los directorios donde Django buscará archivos estáticos además de los de las aplicaciones.
-# El warning indicaba que 'C:\Users\jason\OneDrive - Universidad Tecnológica de Panamá\Git clon\bocaraca_blog\blogproject\static' no existía.
-# Asegúrate de crear esta carpeta o comenta/elimina esta línea si no la necesitas.
+
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Esta línea define el directorio donde Django recolectará todos los archivos estáticos cuando ejecutes 'python manage.py collectstatic'.
@@ -150,7 +149,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
 # Esta línea define la ruta dentro de MEDIA_ROOT donde se guardarán las imágenes subidas a través del editor CKEditor.
-# Asegúrate de que la carpeta 'uploads' exista dentro de tu carpeta 'media'.
+
 
 
 # Default primary key field type
