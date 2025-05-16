@@ -1,0 +1,19 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}Panel - The Last of Us{% endblock %}
+
+{% block extrastyle %}
+  <link rel="stylesheet" href="{% static 'blogapp/css/admin_custom.css' %}">
+{% endblock %}
+
+{% block branding %}
+  <h1 id="site-name">
+    <img src="{% static 'blogapp/images/logo_fireflies.png' %}" alt="Fireflies" style="height:40px; vertical-align:middle;">
+    <span style="margin-left:10px;">Supervivencia Admin</span>
+  </h1>
+{% endblock %}
+
+{% block extrahead %}
+  <link rel="icon" href="{% static 'blogapp/images/favicon.ico' %}" type="image/x-icon" />
+{% endblock %}
