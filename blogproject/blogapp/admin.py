@@ -35,7 +35,7 @@ class BlogAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
             'fields': ('title', 'author', 'categorias', 'content'),
-            'classes': ('wide', 'collapse', 'animate-fade-in'),
+        
         }),
     )
 
@@ -67,4 +67,5 @@ class CategoriaAdmin(admin.ModelAdmin):
 admin.site.site_header = "Panel de Supervivencia - The Last of Us 🧟‍♀️"
 admin.site.site_title = "Administración del Refugio"
 admin.site.index_title = "Control de Contenido y Reseñas"
+
 

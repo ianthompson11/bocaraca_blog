@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-  <article class="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-lg transition-all duration-700 ease-in-out dark:text-white text-gray-900 animate-fade-in">
+  <article class="bg-white/50  dark:bg-transparent dark:bg-opacity-70 backdrop-blur-md p-6 rounded-lg shadow-lg transition-all duration-700 ease-in-out text-gray-900 dark:text-white animate-fade-in">
     <h1 class="text-3xl font-bold mb-2">{{ object.title }}</h1>
  <!-- NUEVO BLOQUE: Categorías -->
   {% if object.categorias.exists %}
@@ -17,8 +17,25 @@
     <p class="text-gray-700 dark:text-gray-300 mb-4">{{ object.content|safe }}</p> {# Se añadió el filtro |safe para renderizar el contenido HTML de CKEditor #}
     <p class="text-sm text-gray-600 dark:text-gray-500">By {{ object.author.username }} - {{ object.created_at }}</p>
   </article>
+  
 
-  <section class="mt-8">
+    
+    <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow-md text-center">
+      <p class="text-lg font-semibold text-gray-900 dark:text-white">Average Rating</p>
+      {% if object.review_count > 0 %}
+        <p class="text-2xl font-bold text-yellow-500">{{ object.average_rating|floatformat:1 }} ⭐</p>
+      {% else %}
+        <p class="text-2xl font-bold text-gray-500">No rating yet</p>
+      {% endif %}
+      <p class="text-sm text-gray-600 dark:text-gray-400">{{ object.review_count }} Reviews</p>
+      {% comment %}
+    Aquí se muestra el promedio de puntuación y el número de reviews.
+    Si no hay reviews, se muestra el mensaje "No rating yet".
+    {% endcomment %}
+    </div>
+  </article>
+
+  <section class="mt-8">
     <h2 class="text-2xl font-semibold mb-4">Reviews</h2>
     {% for review in object.reviews.all %}
       <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg mb-4 transition-all duration-700 ease-in-out dark:text-white text-gray-900 animate-fade-in">
@@ -34,6 +51,9 @@
     {% empty %}
       <p class="text-gray-400">No reviews yet. Be the first to add one.</p>
     {% endfor %}
-    <a href="{% url 'blogapp:add_review' object.pk %}" class="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors">Add Review</a>
-  </section>
+
+    
+    <a href="{% url 'blogapp:add_review' object.pk %}" class="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors">Add Review</a>
+      
+  </section>
 {% endblock %}
