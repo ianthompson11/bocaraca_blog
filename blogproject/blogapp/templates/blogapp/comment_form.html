@@ -7,8 +7,8 @@
             {% for field in form %}
                 <div>
                     <label for="{{ field.id_for_label }}" class="block text-sm font-medium mb-1 text-gray-900 dark:text-white">{{ field.label }}</label>
-                    {% if field.name == 'comment' %}
-                        {# SI el campo actual es el campo llamado 'comment' #}
+                    {% if field.name == 'content' %}
+                        {# SI el campo actual es el campo llamado 'content' #}
                         {{ field|attr:'class:bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2 rounded-lg w-full border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500'|attr:'id:comment-field' }}
                         {# Le aplicamos las clases existentes y le asignamos el ID 'comment-field' #}
                     {% else %}
