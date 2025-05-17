@@ -18,7 +18,7 @@ class BlogListView(LoginRequiredMixin, ListView):
     paginate_by = 2
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = super().get_queryset().order_by('-created_at')
         categoria_slug = self.request.GET.get('categoria')
         if categoria_slug:
             queryset = queryset.filter(categorias__slug=categoria_slug)

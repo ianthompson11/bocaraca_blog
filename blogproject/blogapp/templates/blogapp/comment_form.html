@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% load widget_tweaks %}
 {% block content %}
-    <h1 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Leave a Comment</h1>
+    <h1 class="text-2xl font-bold mb-6 text-white dark:text-white">Leave a Comment</h1>
     <form method="post" class="space-y-4 transition-all duration-700 ease-in-out animate-fade-in">{% csrf_token %}
         <div class="space-y-2 transition-all duration-700 ease-in-out">
             {% for field in form %}
                 <div>
-                    <label for="{{ field.id_for_label }}" class="block text-sm font-medium mb-1 text-gray-900 dark:text-white">{{ field.label }}</label>
+                    <label for="{{ field.id_for_label }}" class="block text-sm font-medium mb-1 text-white dark:text-white">{{ field.label }}</label>
                     {% if field.name == 'content' %}
                         {# SI el campo actual es el campo llamado 'content' #}
                         {{ field|attr:'class:bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2 rounded-lg w-full border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500'|attr:'id:comment-field' }}
