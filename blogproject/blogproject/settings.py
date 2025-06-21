@@ -24,7 +24,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-ukz72g)*267@$nvdk**+6#+a*nyzh_1t3o2=@wxtpga$cew)2^'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+
+#Profiling - Primeros cambios, el Debug=TRUE se elimino ya que esta siendo remplazado por el otro que es una linea completamente nueva
+#            Estos cambios se aceptan completos
+SILKY_PYTHON_PROFILER = True
+DEBUG = os.getenv('DJANGO_DEBUG', 'true') == 'true' #Profiling : DEBUG variable, se cambia en el cmd con set DJANGO_DEBUG=false
+#Profiling - Fin de primeros cambios, abajo hay mas
 
 ALLOWED_HOSTS = []
 
@@ -58,6 +63,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+#Profiling - Cuartos cambios(Arriba hay mas (DEBUG)), antes esta seccion no existia es algo completamente nuevo se acepta por completo
+if DEBUG: 
+    INSTALLED_APPS += ['silk']
+    MIDDLEWARE.insert(0, 'silk.middleware.SilkyMiddleware')  # al inicio del middleware
+#Profiling - Fin de cuartos cambios en este caso en settings. Mas abajo no hay mas cambios
 
 ROOT_URLCONF = 'blogproject.urls'
 

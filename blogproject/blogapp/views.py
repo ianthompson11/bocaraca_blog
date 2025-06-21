@@ -10,12 +10,22 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import redirect
 from django.contrib import messages
 
+#Profiling - Importancion de librerias, estos cambios se aceptan ya que no representan cambios
+from silk.profiling.profiler import silk_profile
+from django.shortcuts import render
+#Profiling - Fin de primeros cambios 
+
+
 
 class BlogListView(LoginRequiredMixin, ListView):
     model = Blog
     template_name = 'blogapp/blog_list.html'
     context_object_name = 'blogs'
     paginate_by = 2
+
+    #Profiling - introduccion de la funcion de profile para la funcion especifica de get_queryset
+    @silk_profile() 
+    #Profiling - Fin de cambio
 
     def get_queryset(self):
         queryset = super().get_queryset().order_by('-created_at')
@@ -24,6 +34,9 @@ class BlogListView(LoginRequiredMixin, ListView):
             queryset = queryset.filter(categorias__slug=categoria_slug)
         return queryset
 
+    #Profiling - introduccion de la funcion de profile para la funcion especifica get_context_data
+    @silk_profile() 
+    #Profiling - Fin de cambio
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         blog_list = self.get_queryset()
