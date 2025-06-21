@@ -7,9 +7,17 @@ from django.shortcuts import redirect
 from .forms import BlogForm
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.shortcuts import redirect
 from django.contrib import messages
 
+# Importación del decorador de caché de vistas
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
+
+from django.utils.timezone import now
+
+from django.shortcuts import render
+
+from datetime import datetime
 
 class BlogListView(LoginRequiredMixin, ListView):
     model = Blog
@@ -43,12 +51,15 @@ class BlogListView(LoginRequiredMixin, ListView):
         return context
 
 
-
+# Decoramos la vista basada en clase con cache_page usando method_decorator
+@method_decorator(cache_page(60 * 15), name='dispatch')  # Cachea por 15 minutos
 class BlogDetailView(DetailView):
     model = Blog
     template_name = 'blogapp/blog_detail.html'
-
-
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['now'] = datetime.now()
+        return context
 
 
 
@@ -102,14 +113,15 @@ class CommentCreateView(CreateView):
     def get_success_url(self):
         return reverse_lazy('blogapp:blog_detail', kwargs={'pk': self.kwargs['blog_pk']})
 
-
 # The last of us
-
+# Aplicamos caché a esta vista de función
+@cache_page(60 * 15)  # Cachea por 15 minutos
 def inicio(request):
     contexto = {
         "titulo": "The Last of Us: Supervivientes",
         "frase": "Cuando estás perdido en la oscuridad, busca la luz.",
         "personaje": "Ellie Williams",
         "imagen": "images/ellie.jpg",
+        "now": datetime.now()  #para la hora
     }
     return render(request, "index.html", contexto)

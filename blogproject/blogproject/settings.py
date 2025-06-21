@@ -160,3 +160,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = "/"  # new Esta linea redirije al usuario a / despues de un ligin exitoso
 LOGOUT_REDIRECT_URL = "/"  # new Esta linea redirije al usuario a / despues de presionar el boton de cerrar sesion
+
+#Esto es configuracion para la parte de la integracion de Redis como cache
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}

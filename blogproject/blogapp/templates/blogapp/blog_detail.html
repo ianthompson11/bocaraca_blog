@@ -56,5 +56,9 @@
     <a href="{% url 'blogapp:add_review' object.pk %}" class="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors">Add Review</a>
   </section>
 </div>
+<!-- esto es para prueba de caché de vista -->
+<div class="text-right mt-2">
+    <p>Renderizado a las: {{ now|date:"H:i d/m/Y" }}</p>
+  </div>
 
 {% endblock %}
