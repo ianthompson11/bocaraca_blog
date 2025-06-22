@@ -52,7 +52,7 @@ class BlogListView(LoginRequiredMixin, ListView):
 
 
 # Decoramos la vista basada en clase con cache_page usando method_decorator
-@method_decorator(cache_page(60 * 15), name='dispatch')  # Cachea por 15 minutos
+@method_decorator(cache_page(60 * 2), name='dispatch')  # Cachea por 2 minutos
 class BlogDetailView(DetailView):
     model = Blog
     template_name = 'blogapp/blog_detail.html'
@@ -115,7 +115,7 @@ class CommentCreateView(CreateView):
 
 # The last of us
 # Aplicamos caché a esta vista de función
-@cache_page(60 * 15)  # Cachea por 15 minutos
+@cache_page(60 * 2)  # Cachea por 2 minutos
 def inicio(request):
     contexto = {
         "titulo": "The Last of Us: Supervivientes",
