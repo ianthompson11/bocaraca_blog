@@ -89,6 +89,7 @@ Se cambio el NPLUSONE LOGGER POR
 `NPLUSONE_LOGGER = logging.getLogger('nplusone')`
 
 Como los cambios funcionaron se remplazo temporal con #optimizacionORM - nplusone
+En este punto aun se pueden hacer pruebas respecto a errores de N+1
 
 
 
