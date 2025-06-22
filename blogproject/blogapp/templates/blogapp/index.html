@@ -8,21 +8,23 @@
         body {
             font-family: Arial, sans-serif;
             margin: 40px;
-            background-color: #2bee08;
+            background-color: #091906;
             color: #333;
         }
         img {
-            max-width: 300px;
+            max-width: 500px;
             border-radius: 10px;
         }
         .contenedor {
             background: white;
             padding: 20px;
+            padding-top: 40px; /* Añadido: Aumenta el espacio superior para bajar el contenido */
             border-radius: 12px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             max-width: 600px;
             margin: auto;
-            position: relative; /* Changed: Added to allow absolute positioning inside */
+            position: relative; 
+            text-align: center;
         }
         .hora {
             margin-top: 20px;
@@ -47,7 +49,7 @@
         <h1>{{ titulo }}</h1>
         <p><em>{{ frase }}</em></p>
         <p><strong>Personaje principal:</strong> {{ personaje }}</p>
-        <img src="{% static imagen %}" alt="{{ personaje }}">
+        <img src="{% static 'blogapp/images/ellie.jpg' %}" alt="{{ personaje }}">
 
         <!-- hora-esquina  -->
         <div class="hora-esquina">

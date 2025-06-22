@@ -130,6 +130,7 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'blogapp/static'),  # Carpeta de blogapp
 ]
 # Esta lista define los directorios donde Django buscará archivos estáticos además de los de las aplicaciones.
 
