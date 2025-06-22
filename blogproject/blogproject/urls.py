@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from blogapp import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,6 +26,7 @@ urlpatterns = [
     path('', include('blogapp.urls')),  # Conecta las URLs de blogapp
     path("accounts/", include("accounts.urls")),  # new Se esta utilizando para la seccion de Sign Up
     path("accounts/", include("django.contrib.auth.urls")),  # new
+    path('inicio/', views.inicio, name='inicio'),  # Cambiado: Mueve inicio a /inicio/ # new esta se usa para la pagina de inicio para la prueba de la cache
 ]
 
 if settings.DEBUG:
