@@ -18,6 +18,8 @@ from django.utils.timezone import now
 from django.shortcuts import render
 
 from datetime import datetime
+from django.core.cache import cache
+
 
 class BlogListView(LoginRequiredMixin, ListView):
     model = Blog
@@ -52,13 +54,22 @@ class BlogListView(LoginRequiredMixin, ListView):
 
 
 # Decoramos la vista basada en clase con cache_page usando method_decorator
-@method_decorator(cache_page(60 * 2), name='dispatch')  # Cachea por 2 minutos
+@method_decorator(cache_page(60 * 5), name='dispatch')  # Cachea por 5 minutos
 class BlogDetailView(DetailView):
     model = Blog
     template_name = 'blogapp/blog_detail.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['now'] = datetime.now()
+
+        # Caché de consulta para las reviews
+        cache_key = f'reviews_for_blog_{self.object.pk}'
+        reviews = cache.get(cache_key)
+        if not reviews:
+            # Consulta a la base de datos si no está en caché
+            reviews = Review.objects.filter(blog_id=self.object.pk).select_related('reviewer')
+            cache.set(cache_key, reviews, timeout=300)  # 5 minutos (300 segundos)
+        context['reviews'] = reviews
         return context
 
 

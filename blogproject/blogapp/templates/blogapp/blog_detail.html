@@ -36,11 +36,11 @@
     </div>
 
 <!-- BLOQUE ENVOLVENTE PARA REVIEWS -->
- {% cache 120 reviews object.pk %}  <!-- Cachea el bloque de reviews por 2 minutos, usando el ID del blog como clave -->
+ {% cache 120 reviews object.pk %}  <!-- Cachea el bloque de reviews por 2 minutos fragmento-->
 <div class="bg-white/50 dark:bg-transparent dark:bg-opacity-70 backdrop-blur-md p-6 rounded-lg shadow-lg transition-all duration-700 ease-in-out text-gray-900 dark:text-white animate-fade-in mt-2">
   <section>
     <h2 class="text-2xl font-semibold mb-4">Reviews</h2>
-    {% for review in object.reviews.all %}
+   {% for review in reviews|default:object.reviews.all %}
       <div class="mb-4">
         <p class="text-blue-700 dark:text-blue-300 font-medium">{{ review.reviewer.username }} - {{ review.rating }}/5 ⭐</p>
         <p class="text-gray-700 dark:text-gray-300">{{ review.comment|safe }}</p>
