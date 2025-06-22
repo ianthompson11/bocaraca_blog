@@ -7,7 +7,6 @@ from django.shortcuts import redirect
 from .forms import BlogForm
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.shortcuts import redirect
 from django.contrib import messages
 
 #Profiling - Importancion de librerias, estos cambios se aceptan ya que no representan cambios
@@ -15,6 +14,16 @@ from silk.profiling.profiler import silk_profile
 from django.shortcuts import render
 #Profiling - Fin de primeros cambios 
 
+# Importación del decorador de caché de vistas
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
+
+from django.utils.timezone import now
+
+from django.shortcuts import render
+
+from datetime import datetime
+from django.core.cache import cache
 
 
 class BlogListView(LoginRequiredMixin, ListView):
@@ -56,12 +65,24 @@ class BlogListView(LoginRequiredMixin, ListView):
         return context
 
 
-
+# Decoramos la vista basada en clase con cache_page usando method_decorator
+@method_decorator(cache_page(60 * 5), name='dispatch')  # Cachea por 5 minutos
 class BlogDetailView(DetailView):
     model = Blog
     template_name = 'blogapp/blog_detail.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['now'] = datetime.now()
 
-
+        # Caché de consulta para las reviews
+        cache_key = f'reviews_for_blog_{self.object.pk}'
+        reviews = cache.get(cache_key)
+        if not reviews:
+            # Consulta a la base de datos si no está en caché
+            reviews = Review.objects.filter(blog_id=self.object.pk).select_related('reviewer')
+            cache.set(cache_key, reviews, timeout=300)  # 5 minutos (300 segundos)
+        context['reviews'] = reviews
+        return context
 
 
 
@@ -115,15 +136,16 @@ class CommentCreateView(CreateView):
     def get_success_url(self):
         return reverse_lazy('blogapp:blog_detail', kwargs={'pk': self.kwargs['blog_pk']})
 
-
 # The last of us
-
+# Aplicamos caché a esta vista de función
+@cache_page(60 * 2)  # Cachea por 2 minutos
 def inicio(request):
     contexto = {
         "titulo": "The Last of Us: Supervivientes",
         "frase": "Cuando estás perdido en la oscuridad, busca la luz.",
         "personaje": "Ellie Williams",
         "imagen": "images/ellie.jpg",
+        "now": datetime.now()  #para la hora
     }
     return render(request, "index.html", contexto)
 

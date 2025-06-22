@@ -187,6 +187,7 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'blogapp/static'),  # Carpeta de blogapp
 ]
 # Esta lista define los directorios donde Django buscará archivos estáticos además de los de las aplicaciones.
 
@@ -217,3 +218,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = "/"  # new Esta linea redirije al usuario a / despues de un ligin exitoso
 LOGOUT_REDIRECT_URL = "/"  # new Esta linea redirije al usuario a / despues de presionar el boton de cerrar sesion
+
+#Esto es configuracion para la parte de la integracion de Redis como cache
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
