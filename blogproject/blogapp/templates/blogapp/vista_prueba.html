@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vista de Prueba N+1</title>
+</head>
+<body>
+    <h1>Blogs y Categorías</h1>
+    <ul>
+    {% for item in datos %}
+        <li>{{ item.titulo }} - Categorías: {{ item.categorias|join:", " }}</li>
+    {% endfor %}
+    </ul>
+</body>
+</html>

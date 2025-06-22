@@ -126,3 +126,19 @@ def inicio(request):
         "imagen": "images/ellie.jpg",
     }
     return render(request, "index.html", contexto)
+
+#optimizacionORM - nplusone -  Codigo que crea vista ficticia llamada a la que se accede en localhost:8000/prueba con error a proposito
+#                              Para que nplusone lo detecte. Solo se accede desde el enlace
+def vista_prueba_nplusone(request): #TEMPORAL
+    # Vista diseñada para generar un problema N+1
+    blogs = Blog.objects.all()
+    datos = []
+    for blog in blogs:
+        # Acceder a la relación M2M 'categorias' en un bucle genera consultas N+1
+        categorias_nombres = [categoria.nombre for categoria in blog.categorias.all()]
+        datos.append({
+            'titulo': blog.title,
+            'categorias': categorias_nombres,
+        })
+    return render(request, 'blogapp/vista_prueba.html', {'datos': datos})
+#optimizacionORM - nplusone

@@ -35,4 +35,7 @@ if settings.DEBUG:
         path('silk/', include('silk.urls', namespace='silk')),
     ]
 #Profiling - Fin ultima modificacion
+#optimizacionORM - Para agregar tambien esto a urlpatterns
+    urlpatterns += [path('__debug__/', include('debug_toolbar.urls'))]
+#optimizacionORM - Fin ultima modificacion
 
