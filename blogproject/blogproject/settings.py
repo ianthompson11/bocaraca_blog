@@ -101,7 +101,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware', 
 ]
 #optimizacionORM - nplusone 
-NPLUSONE_RAISE = True  # Si se tiene en False no levanta mensaje de error. En true manda errores en la pantalla principal
+NPLUSONE_RAISE = False  # Si se tiene en False no levanta mensaje de error. En true manda errores en la pantalla principal
 NPLUSONE_LOGGER = logging.getLogger('nplusone')
 #optimizacionORM - nplusone
 
