@@ -44,7 +44,10 @@
 
 
   {{ form.media }}
-  <link rel="stylesheet" href="{% static 'blogapp/css/styles.css' %}" />
+{% load static compress %}
+{% compress css %}
+<link rel="stylesheet" href="{% static 'blogapp/css/styles.css' %}">
+{% endcompress %}
 
   <style>
     /* Fondo claro con imagen */
