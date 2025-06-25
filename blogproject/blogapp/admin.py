@@ -35,9 +35,12 @@ class BlogAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
             'fields': ('title', 'author', 'categorias', 'content'),
-        
         }),
     )
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        return queryset.select_related('author').prefetch_related('categorias')
 
     def get_categorias(self, obj):
         return ", ".join([c.nombre for c in obj.categorias.all()])
@@ -50,12 +53,20 @@ class ReviewAdmin(admin.ModelAdmin):
     list_filter = ('rating', 'created_at')
     search_fields = ('reviewer__username', 'blog__title')
 
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        return queryset.select_related('reviewer', 'blog')
+
 # -------- Admin personalizado para Comment --------
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     form = CommentAdminForm
     list_display = ('commenter', 'review', 'created_at')
     search_fields = ('commenter__username', 'review__blog__title')
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        return queryset.select_related('commenter', 'review')
 
 # -------- Admin para Categoría --------
 @admin.register(Categoria)

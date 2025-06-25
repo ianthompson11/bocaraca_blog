@@ -5,9 +5,17 @@ from .models import Blog, Review, Comment, Categoria
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from .forms import BlogForm
+#Error N+1 - Importacion Libreria
+from django.db.models import Prefetch
+#Error N+1 - Fin cambio
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
+
+#Profiling - Importancion de librerias, estos cambios se aceptan ya que no representan cambios
+from silk.profiling.profiler import silk_profile
+from django.shortcuts import render
+#Profiling - Fin de primeros cambios 
 
 # Importación del decorador de caché de vistas
 from django.views.decorators.cache import cache_page
@@ -27,13 +35,22 @@ class BlogListView(LoginRequiredMixin, ListView):
     context_object_name = 'blogs'
     paginate_by = 2
 
+    #Profiling - introduccion de la funcion de profile para la funcion especifica de get_queryset
+    @silk_profile() 
+    #Profiling - Fin de cambio
+
     def get_queryset(self):
-        queryset = super().get_queryset().order_by('-created_at')
+        #Error N+1 - Correccion de la linea se cambio un codigo anterior, no se agrego completamente
+        queryset = super().get_queryset().select_related('author').order_by('-created_at')
+        #Error N+1 - Correccion de la linea se cambio un codigo anterior, no se agrego completamente
         categoria_slug = self.request.GET.get('categoria')
         if categoria_slug:
             queryset = queryset.filter(categorias__slug=categoria_slug)
         return queryset
 
+    #Profiling - introduccion de la funcion de profile para la funcion especifica get_context_data
+    @silk_profile() 
+    #Profiling - Fin de cambio
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         blog_list = self.get_queryset()
@@ -62,13 +79,21 @@ class BlogDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['now'] = datetime.now()
 
-        # Caché de consulta para las reviews
         cache_key = f'reviews_for_blog_{self.object.pk}'
         reviews = cache.get(cache_key)
         if not reviews:
-            # Consulta a la base de datos si no está en caché
-            reviews = Review.objects.filter(blog_id=self.object.pk).select_related('reviewer')
-            cache.set(cache_key, reviews, timeout=300)  # 5 minutos (300 segundos)
+            #Error N+1 - Cambio en reviews, no es linea nueva sino modificacion 
+            # Pre-fetch comments y también select_related del commenter
+            reviews = Review.objects.filter(blog_id=self.object.pk)\
+                .select_related('reviewer')\
+                .prefetch_related(
+                    Prefetch(
+                        'comments',
+                        queryset=Comment.objects.select_related('commenter')
+                    )
+                )
+            #Error N+1 -
+            cache.set(cache_key, reviews, timeout=300)
         context['reviews'] = reviews
         return context
 
@@ -136,3 +161,19 @@ def inicio(request):
         "now": datetime.now()  #para la hora
     }
     return render(request, "index.html", contexto)
+
+#optimizacionORM - nplusone -  Codigo que crea vista ficticia llamada a la que se accede en localhost:8000/prueba con error a proposito
+#                              Para que nplusone lo detecte. Solo se accede desde el enlace
+def vista_prueba_nplusone(request):
+    # Vista diseñada para generar un problema N+1
+    blogs = Blog.objects.all()
+    datos = []
+    for blog in blogs:
+        # Acceder a la relación M2M 'categorias' en un bucle genera consultas N+1
+        categorias_nombres = [categoria.nombre for categoria in blog.categorias.all()]
+        datos.append({
+            'titulo': blog.title,
+            'categorias': categorias_nombres,
+        })
+    return render(request, 'blogapp/vista_prueba.html', {'datos': datos})
+#optimizacionORM - nplusone

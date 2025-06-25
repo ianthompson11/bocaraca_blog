@@ -31,4 +31,13 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+#Profiling - Todo lo que se encuentra en este espacio es completamente nuevo - En la fusion se puede aceptar esta
+#            version ya que incluye ambas cosas
+    urlpatterns += [
+        path('silk/', include('silk.urls', namespace='silk')),
+    ]
+#Profiling - Fin ultima modificacion
+#optimizacionORM - Para agregar tambien esto a urlpatterns
+    urlpatterns += [path('__debug__/', include('debug_toolbar.urls'))]
+#optimizacionORM - Fin ultima modificacion
 

@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os  
+#optimizacionORM - nplusone - importacion libreria para registrar datos de nplusone
+import logging 
+#optimizacionORM - nplusone
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,9 +27,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-ukz72g)*267@$nvdk**+6#+a*nyzh_1t3o2=@wxtpga$cew)2^'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+
+#Profiling - Primeros cambios, el Debug=TRUE se elimino ya que esta siendo remplazado por el otro que es una linea completamente nueva
+#            Estos cambios se aceptan completos
+SILKY_PYTHON_PROFILER = True
+DEBUG = os.getenv('DJANGO_DEBUG', 'true') == 'true' #Profiling : DEBUG variable, se cambia en el cmd con set DJANGO_DEBUG=false
+#Profiling - Fin de primeros cambios, abajo hay mas
+
+#optimizacionORM - Sin esto no funciona lo del debugToolbar
+INTERNAL_IPS = ['127.0.0.1']
+#optimizacionORM
+
+
 
 ALLOWED_HOSTS = []
+
 
 
 # Application definition
@@ -40,6 +55,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'widget_tweaks',
+    #optimizacionORM - nplusone
+    'nplusone.ext.django',  # Añade la aplicación de nplusone
+    #optimizacionORM - nplusone 
 
     # App del blog
     'ckeditor',
@@ -49,15 +67,54 @@ INSTALLED_APPS = [
 
 ]
 
+#optimizacionORM - nplusone
+# Configuración de logging para nplusone
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'WARNING',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'nplusone': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}
+#optimizacionORM - nplusone
+
 MIDDLEWARE = [
+    #optimizacionORM - nplusone
+    'nplusone.ext.django.NPlusOneMiddleware', #TAgregando nplusone al middleware
+    #optimizacionORM - nplusone
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware', 
 ]
+#optimizacionORM - nplusone 
+NPLUSONE_RAISE = False  # Si se tiene en False no levanta mensaje de error. En true manda errores en la pantalla principal
+NPLUSONE_LOGGER = logging.getLogger('nplusone')
+#optimizacionORM - nplusone
+
+#optimizacionORM - Para agregar a installed apps y a Middleware
+INSTALLED_APPS += ['debug_toolbar']
+MIDDLEWARE = ['debug_toolbar.middleware.DebugToolbarMiddleware'] + MIDDLEWARE
+#optimizacionORM
+
+#Profiling - Cuartos cambios(Arriba hay mas (DEBUG)), antes esta seccion no existia es algo completamente nuevo se acepta por completo
+if DEBUG: 
+    INSTALLED_APPS += ['silk']
+    MIDDLEWARE.insert(0, 'silk.middleware.SilkyMiddleware')  # al inicio del middleware
+#Profiling - Fin de cuartos cambios en este caso en settings. Mas abajo no hay mas cambios
 
 ROOT_URLCONF = 'blogproject.urls'
 
