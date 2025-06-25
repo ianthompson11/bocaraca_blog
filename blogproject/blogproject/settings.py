@@ -185,7 +185,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = '/static/'
+
+# Cambia esto dinámicamente según el entorno
+if os.getenv("USE_CDN") == "true":
+    STATIC_URL = 'https://cdn-bocaraca.pages.dev/blogapp/'
+else:
+    STATIC_URL = "/static/"
+
 # Esta línea define la URL base para acceder a los archivos estáticos en tu sitio web.
 
 STATICFILES_DIRS = [
