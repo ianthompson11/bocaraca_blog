@@ -185,11 +185,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-# STATIC_URL = '/static/'
+STATIC_URL = '/static/'
 # Esta línea define la URL base para acceder a los archivos estáticos en tu sitio web.
-
-STATIC_URL = 'https://cdn.jsdelivr.net/gh/ianthompson11/bocaraca_blog@main/cdn_static/blogapp/'
-# Esta líne define la URL base para acceder a los archivos estáticos de la aplicación blogapp.
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
