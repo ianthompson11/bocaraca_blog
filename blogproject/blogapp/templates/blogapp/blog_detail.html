@@ -23,12 +23,12 @@
     
     <div class="bg-white/50  dark:bg-transparent dark:bg-opacity-70 backdrop-blur-md p-6 rounded-lg shadow-lg transition-all duration-700 ease-in-out text-gray-900 dark:text-white animate-fade-in text-center">
       <p class="text-lg font-semibold text-gray-900 dark:text-white">Average Rating</p>
-      {% if object.review_count > 0 %}
-        <p class="text-2xl font-bold text-yellow-500">{{ object.average_rating|floatformat:1 }} ⭐</p>
+      {% if object.review_count_db > 0 %}
+        <p class="text-2xl font-bold text-yellow-500">{{ object.average_rating_db|floatformat:1 }} ⭐</p>
       {% else %}
         <p class="text-2xl font-bold text-gray-500">No rating yet</p>
       {% endif %}
-      <p class="text-sm text-gray-600 dark:text-gray-400">{{ object.review_count }} Reviews</p>
+      <p class="text-sm text-gray-600 dark:text-gray-400">{{ object.review_count_db }} Reviews</p>
       {% comment %}
     Aquí se muestra el promedio de puntuación y el número de reviews.
     Si no hay reviews, se muestra el mensaje "No rating yet".

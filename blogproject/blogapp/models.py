@@ -39,17 +39,7 @@ class Blog(models.Model):
     
     def __str__(self):
         return self.title
-#se calcula el promedio de las puntuaciones de reviews del blog
-    @property
-    def average_rating(self):
-        reviews = self.reviews.all()
-        if reviews.exists():
-            return reviews.aggregate(Avg('rating'))['rating__avg'] or 0
-        return 0
-#se cuentan las reviews del blog
-    @property
-    def review_count(self):
-        return self.reviews.count()
+
 
 class Review(models.Model):
     blog = models.ForeignKey(Blog, on_delete=models.CASCADE, related_name='reviews')

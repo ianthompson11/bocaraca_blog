@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from .forms import BlogForm
 #Error N+1 - Importacion Libreria
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Avg, Count #para reducir consultas
 #Error N+1 - Fin cambio
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -41,7 +41,7 @@ class BlogListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         #Error N+1 - Correccion de la linea se cambio un codigo anterior, no se agrego completamente
-        queryset = super().get_queryset().select_related('author').order_by('-created_at')
+        queryset = super().get_queryset().select_related('author').prefetch_related('categorias').order_by('-created_at')
         #Error N+1 - Correccion de la linea se cambio un codigo anterior, no se agrego completamente
         categoria_slug = self.request.GET.get('categoria')
         if categoria_slug:
@@ -76,15 +76,24 @@ class BlogDetailView(DetailView):
     model = Blog
     template_name = 'blogapp/blog_detail.html'
     def get_context_data(self, **kwargs):
+         # Optimización: obtener el blog con author y categorias
+        blog = Blog.objects.select_related('author')\
+            .prefetch_related('categorias')\
+            .annotate(
+                average_rating_db=Avg('reviews__rating'),
+                review_count_db=Count('reviews')
+            ).get(pk=self.object.pk)
+        
         context = super().get_context_data(**kwargs)
+        context['object'] = blog  # actualiza el objeto en el contexto
         context['now'] = datetime.now()
 
-        cache_key = f'reviews_for_blog_{self.object.pk}'
+        cache_key = f'reviews_for_blog_{blog.pk}'
         reviews = cache.get(cache_key)
         if not reviews:
             #Error N+1 - Cambio en reviews, no es linea nueva sino modificacion 
             # Pre-fetch comments y también select_related del commenter
-            reviews = Review.objects.filter(blog_id=self.object.pk)\
+            reviews = Review.objects.filter(blog_id=blog.pk)\
                 .select_related('reviewer')\
                 .prefetch_related(
                     Prefetch(
