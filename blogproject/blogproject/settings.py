@@ -187,8 +187,10 @@ USE_TZ = True
 
 
 # Cambia esto dinámicamente según el entorno
-if os.getenv("USE_CDN") == "true":
-    STATIC_URL = 'https://cdn-bocaraca.pages.dev/blogapp/'
+USE_CDN = os.getenv("USE_CDN") == "true"
+
+if USE_CDN:
+    STATIC_URL = "https://comprimir-cdn.cdn-bocaraca.pages.dev/"
 else:
     STATIC_URL = "/static/"
 
