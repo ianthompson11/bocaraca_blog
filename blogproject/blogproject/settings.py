@@ -65,6 +65,8 @@ INSTALLED_APPS = [
 
     "accounts",  # new Esta se esta agregando para hacer el sign up
 
+    "compressor", # Habilita django-compressor para minificar archivos CSS y JS
+
 ]
 
 #optimizacionORM - nplusone
@@ -93,6 +95,7 @@ MIDDLEWARE = [
     'nplusone.ext.django.NPlusOneMiddleware', #TAgregando nplusone al middleware
     #optimizacionORM - nplusone
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # Middleware para servir archivos estáticos comprimidos en producción sin necesidad de nginx
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -182,7 +185,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = '/static/'
+
+# Cambia esto dinámicamente según el entorno
+USE_CDN = os.getenv("USE_CDN") == "true"
+
+if USE_CDN:
+    STATIC_URL = "https://comprimir-cdn.cdn-bocaraca.pages.dev/"
+else:
+    STATIC_URL = "/static/"
+
 # Esta línea define la URL base para acceder a los archivos estáticos en tu sitio web.
 
 STATICFILES_DIRS = [
@@ -195,6 +206,25 @@ STATICFILES_DIRS = [
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Esta línea define el directorio donde Django recolectará todos los archivos estáticos cuando ejecutes 'python manage.py collectstatic'.
 # Asegúrate de que la carpeta 'staticfiles' exista en la raíz de tu proyecto.
+
+# Define cómo Django debe servir los archivos estáticos comprimidos
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# Comprime automáticamente archivos y agrega hash para control de versiones en caché
+
+
+# Define los buscadores de archivos estáticos. El de compressor se encarga de encontrarlos para minificarlos
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',        # Busca archivos estáticos en STATICFILES_DIRS
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',    # Busca archivos en la carpeta /static de cada app
+    'compressor.finders.CompressorFinder',                        # Habilita la búsqueda de archivos para django-compressor
+]
+
+# Activa la minificación y procesamiento offline (anticipado) de CSS/JS
+COMPRESS_ENABLED = True                 # Activa django-compressor
+COMPRESS_OFFLINE = True                # Preprocesa y guarda los archivos minificados al ejecutar `compress`
+COMPRESS_ROOT = STATIC_ROOT            # Usa los archivos que fueron reunidos con collectstatic
+COMPRESS_CSS_HASHING_METHOD = 'content'  # Cambia nombre de archivo cuando su contenido cambia (para cache busting)
+
 
 # PARA IMAGENES EN EL CAMPO TEXTO  SE AGREGÓ
 
