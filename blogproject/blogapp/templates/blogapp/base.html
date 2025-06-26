@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Blog and Reviews</title>
   <link rel="icon" type="image/webp" href="{% static 'blogapp/images/favicon.webp' %}">
+ 
+
   
   <!-- Script inline para aplicar el tema inmediatamente -->
   <script>
@@ -44,7 +46,10 @@
 
 
   {{ form.media }}
-  <link rel="stylesheet" href="{% static 'blogapp/css/styles.css' %}" />
+{% load static compress %}
+{% compress css %}
+<link rel="stylesheet" href="{% static 'blogapp/css/styles.css' %}">
+{% endcompress %}
 
   <style>
     /* Fondo claro con imagen */
@@ -53,14 +58,14 @@
       padding: 0;
       min-height: 100%;
       scroll-behavior: smooth;
-      background-image: url("{% static 'blogapp/images/fondo.png' %}");
+      background-image: url("{% static 'blogapp/images/fondo_optimizado.webp' %}"); /* imagen de fondo optimizada */
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center;
     }
 
     .dark html, .dark body {
-      background-image: url("{% static 'blogapp/images/fondo_dark2.jpg' %}");
+     background-image: url("{% static 'blogapp/images/fondo_dark2_optimizado.webp' %}");/* imagen de fondo optimizada */
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center;
